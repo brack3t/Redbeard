@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 import redis
+import settings
 
 SECRET_KEY = '781b0650af13493089a6ffafac755a61'
 
@@ -7,7 +8,8 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.debug = True
 
-r = redis.Redis()
+r = redis.Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT,
+    db=settings.REDIS_DB)
 
 @app.route('/')
 def index():
