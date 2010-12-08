@@ -30,6 +30,8 @@ def key(key):
         output = r.hgetall(key)
     elif rtype == 'set':
         output = r.smembers(key)
+    elif rtype == 'zset':
+        output = r.zrange(key, 0, -1, withscores=True)
     else:
         output = r.get(key)
     return render_template('key.html', key=key, output=output)
