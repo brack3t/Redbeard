@@ -14,6 +14,8 @@ def index():
 def key(key):
     if r.type(key) == 'hash':
         output = r.hgetall(key)
+    elif r.type(key) == 'set':
+        output = r.smembers(key)
     else:
         output = r.get(key)
     return render_template('key.html', key=key, output=output)
