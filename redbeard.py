@@ -34,7 +34,7 @@ def key(key):
         output = r.zrange(key, 0, -1, withscores=True)
     else:
         output = r.get(key)
-    return render_template('key.html', key=key, output=output)
+    return render_template('key.html', rtype=rtype, key=key, output=output)
 
 @app.route('/key/save/<key>', methods=['POST'])
 def save(key):

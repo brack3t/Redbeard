@@ -17,6 +17,7 @@
 		{% endif %}
 	{% endwith %}
 	<h1>{{ key }}</h1>
+	<h2>{{ rtype }}</h2>
 	<form action="{{ url_for('save', key=key) }}" method="post">
 		<textarea name="value" cols="80" rows="20">{{ output }}</textarea>
 		<br>
