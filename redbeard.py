@@ -20,5 +20,9 @@ def key(key):
         output = r.get(key)
     return render_template('key.html', key=key, output=output)
 
+@app.route('/info/')
+def info():
+    return render_template('info.html', info=r.info().items())
+
 if __name__ == '__main__':
     app.run()
