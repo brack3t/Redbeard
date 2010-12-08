@@ -1,6 +1,10 @@
-from flask import Flask, render_template, redirect, url_for, request
+from flask import Flask, render_template, redirect, url_for, request, flash
 import redis
+
+SECRET_KEY = '781b0650af13493089a6ffafac755a61'
+
 app = Flask(__name__)
+app.config.from_object(__name__)
 app.debug = True
 
 r = redis.Redis()
@@ -21,18 +25,21 @@ def key(key):
         output = r.get(key)
     return render_template('key.html', key=key, output=output)
 
+@app.route('/info/')
+def info():
+    return render_template('info.html', info=r.info().items())
+
 @app.route('/key/save/<key>', methods=['POST'])
 def save(key):
     rtype = r.type(key)
-    value = request.form['value'].strip('{}')
-    new_value = dict([kv.split(':') for kv in value])
+    value = request.form['value']
 
-    return ', '.join(new_value.keys())
     if rtype == 'hash':
-        #r.delete(key)
-        #r.set(key, request.form['value'])
-        #r.set(key, "{'balls':'lick them'}")
-        pass
+        r.delete(key)
+        r.hset(key, value)
+    elif rtype == 'string':
+        r.set(key, value)
+        flash(key + ' was saved successfully')
 
     return redirect(url_for('key', key=key))
 
