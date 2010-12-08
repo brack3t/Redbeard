@@ -8,7 +8,11 @@
 </head>
 <body>
 	<h1>{{ key }}</h1>
-	<pre>{{ output }}</pre>
+	<form action="{{ url_for('save', key=key) }}" method="post">
+		<textarea name="value" cols="80" rows="20">{{ output }}</textarea>
+		<br>
+		<input type="submit" value="save">
+	</form>
 	<a href="{{ url_for('index') }}">back</a>
 </body>
 </html>
