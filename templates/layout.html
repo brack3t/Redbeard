@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+	<title>{% block title %}Redbeard{% endblock %}</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}" type="text/css" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="screen" charset="utf-8">
+	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.4.4.min.js') }}"></script>
+</head>
+<body>
+
+<div class="row">
+	<div id="header" class="column grid_12">
+		{% block header %}
+		<h1>RedBeard</h1>
+		{% endblock %}
+	</div>
+</div>
+
+<div class="row">
+	<div id="messages" class="column grid_12">
+	{% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul class="flashes">
+        	{% for message in messages %}
+        	<li>{{ message }}</li>
+        	{% endfor %}
+        </ul>
+        {% endif %}
+    {% endwith %}
+	</div>
+</div>
+		
+
+<div class="row">
+
+	<div class="row">
+		<div id="left" class="column grid_5">
+			{% block leftblock %}
+			<h2>Left Bar</h2>
+			{% endblock %}
+		</div>
+
+		<div id="right" class="column grid_7">
+			{% block content %}
+			<h2>Content Area</h2>
+			{% endblock %}
+		</div>
+	</div>
+
+</div>
+
+<div class="row">
+	<div id="footer" class="column grid_12">
+		{% block footer %}
+		<h1>Footer</h1>
+		{% endblock %}
+	</div>
+</div>
+
+</body>
+</html>

@@ -1,17 +1,31 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+{% extends "layout.html" %}
 
-	<title>Redbeard</title>
-	
-</head>
-<body>
-	<h1>Red fuckin' beard</h1>
-	<ul>
-		{% for key in keys %}
-		<li><a href="{{ url_for('key', key=key) }}">{{ key }}</a></li>
-		{% endfor %}
-	</ul>
-</body>
-</html>
+{% block leftblock %}
+<form action="{{ url_for('change_db') }}" method="post">
+	<label for="redis_db">Redis DB:</label>
+	<select id="redis_db" name="redis_db">
+		<option value="0">0</option>
+		<option value="1">1</option>
+		<option value="2">2</option>
+		<option value="3">3</option>
+		<option value="4">4</option>
+		<option value="5">5</option>
+		<option value="6">6</option>
+		<option value="7">7</option>
+		<option value="8">8</option>
+		<option value="9">9</option>
+	</select>
+	<input type="submit" value="Go">
+</form>
+
+<h2>Keys</h2>
+<ul>
+	{% for key in keys %}
+	<li><a href="{{ url_for('key', key=key) }}">{{ key }}</a></li>
+	{% endfor %}
+</ul>
+{% endblock %}
+
+{% block content %}
+<p>Hi! I'm some content!</p>
+{% endblock %}
