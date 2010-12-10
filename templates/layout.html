@@ -13,6 +13,14 @@
 	<div id="header" class="column grid_12">
 		{% block header %}
 		<h1>RedBeard</h1>
+		{% if session %}
+			<p>Redis connection info</p>
+			<ul>
+				<li>Host: {{ session.redis_host }}</li>
+				<li>Port: {{ session.redis_port }}</li>
+				<li>DB: {{ session.redis_db }}</li>
+			</ul>
+		{% endif %}
 		{% endblock %}
 	</div>
 </div>
