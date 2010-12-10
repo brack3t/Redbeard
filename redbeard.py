@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
-from flask import session
+from flask import session, jsonify
 import redis
 import settings
 
@@ -97,9 +97,12 @@ def save(key):
     elif rtype == 'string':
         r.set(key, value)
 
-    flash(key + ' was saved successfully')
+    #flash(key + ' was saved successfully')
 
-    return redirect(url_for('key', key=key))
+    return jsonify(
+        flash=key + ' was saved successfully',
+        value=value + 'boobs'
+    )
 
 if __name__ == '__main__':
     app.run()

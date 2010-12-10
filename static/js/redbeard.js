@@ -20,3 +20,31 @@ function listFilter(header, list) {
         $(this).change();
     });
 }
+
+jQuery(window).hashchange(function() {
+    var link = "/key/" + window.location.hash.replace("#", "");
+    $.get(link, function(data) {
+        $('#right').html(data);
+    });
+});
+
+$(function() {
+	listFilter($("#keyheader"), $("#keylist"));
+
+    if (window.location.hash) {
+        var link = "/key/" + window.location.hash.replace("#", "");
+        $.get(link, function(data) {
+            $('#right').html(data);
+        });
+    }
+
+    $("a", "#keylist").live('click', function(e) {
+        var link = $(this).attr('href'),
+            hash = link.replace("/key/", "");
+        e.preventDefault();
+        $.get(link, function(data) {
+            $('#right').html(data);
+            window.location.hash = hash;
+        });
+    });
+});

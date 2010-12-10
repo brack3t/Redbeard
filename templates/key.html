@@ -1,28 +1,41 @@
-<!DOCTYPE HTML>
-<html>
-<head>
-	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<ul id="flashes"></ul>
 
-	<title>Redbeard</title>
-	
-</head>
-<body>
-	{% with messages = get_flashed_messages() %}
-		{% if messages %}
-		<ul class="flashes">
-			{% for message in messages %}
-			<li>{{ message }}</li>
-			{% endfor %}
-		</ul>
-		{% endif %}
-	{% endwith %}
-	<h1>{{ key }}</h1>
-	<h2>{{ rtype }}</h2>
-	<form action="{{ url_for('save', key=key) }}" method="post">
-		<textarea name="value" cols="80" rows="20">{{ output }}</textarea>
+<article>
+	<header>
+		<h1>{{ key }}</h1>
+		<h2>{{ rtype }}</h2>
+	</header>
+	<form action="{{ url_for('save', key=key) }}" method="post" 
+		id="key">
+		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
 		<br>
 		<input type="submit" value="save">
 	</form>
-	<a href="{{ url_for('index') }}">back</a>
-</body>
-</html>
+</article>
+
+<script>
+	$(function() {
+    	$("#key").submit(function(e) {
+        	e.preventDefault();
+
+			var link = $(this).attr("action"),
+				flashes = $("#flashes");
+
+			flashes.empty();
+
+			$.ajax({
+				url: link,
+				type: "POST",
+				data: {
+					"value": $(this).find("textarea").val()
+				},
+				dataType: "json",
+				success: function(data) {
+					console.log(data);
+					$(this).find("textarea").val(data['value']);
+					$("<li>").text(data['flash']).appendTo(flashes);
+				}
+			});
+    	});
+	});
+</script>

@@ -31,10 +31,6 @@
 {% endblock %}
 
 {% block extra_scripts %}
+	<script src="{{ url_for('static', filename='js/jquery.hashchange.min.js') }}"></script>
 	<script src="{{ url_for('static', filename='js/redbeard.js') }}"></script>
-	<script>
-		$(function() {
-			listFilter($("#keyheader"), $("#keylist"));
-		});
-	</script>
 {% endblock %}
