@@ -11,10 +11,21 @@
 		<br>
 		<input type="submit" value="save">
 	</form>
+	<a id="refresh" href="{{ url_for('key', key=key) }}">refresh</a>
 </article>
 
 <script>
 	$(function() {
+		$("#refresh").live('click', function(e) {
+        	var link = $(this).attr('href'),
+            	hash = link.replace("/key/", "");
+        	e.preventDefault();
+        	$.get(link, function(data) {
+            	$('#right').html(data);
+            	window.location.hash = hash;
+        	});
+		});
+
     	$("#key").submit(function(e) {
         	e.preventDefault();
 
