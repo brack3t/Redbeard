@@ -47,4 +47,8 @@ $(function() {
             window.location.hash = hash;
         });
     });
+
+    $("#redis_db").live('change', function() {
+        $(this).parent('form').submit();
+    });
 });
