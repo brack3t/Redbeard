@@ -18,8 +18,8 @@
 	<input type="submit" value="Go">
 </form>
 
-<h2>Keys</h2>
-<ul>
+<h2 id="keyheader">Keys</h2>
+<ul id="keylist">
 	{% for key in keys %}
 	<li><a href="{{ url_for('key', key=key) }}">{{ key }}</a></li>
 	{% endfor %}
@@ -28,4 +28,13 @@
 
 {% block content %}
 <p>Hi! I'm some content!</p>
+{% endblock %}
+
+{% block extra_scripts %}
+	<script src="{{ url_for('static', filename='js/redbeard.js') }}"></script>
+	<script>
+		$(function() {
+			listFilter($("#keyheader"), $("#keylist"));
+		});
+	</script>
 {% endblock %}
