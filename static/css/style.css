@@ -108,6 +108,15 @@ h1 {
     .filterform input[type=search] {
       width:250px;
     }
+    #refresh_keys {
+      background:url('../img/loop.png') center center no-repeat;
+      display:block;
+      float:left;
+      height:20px;
+      margin-right:10px;
+      width:12px;
+      text-indent:-99999px;
+    }
   #keylist {
     border:1px solid rgba(30,30,30,0.5);
     clear:both;
@@ -130,6 +139,7 @@ h1 {
       #keylist li.current a { font-weight:bold; }
       #keylist li a {
         color:#333;
+        display:block;
         text-decoration:none;
       }
 

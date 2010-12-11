@@ -62,6 +62,17 @@ def index():
     keys = r.keys()
     return render_template('index.html', keys=keys)
 
+@app.route('/keys')
+def keys():
+    """ Get available keys. """
+    if not session.has_key('redis_db'):
+        set_session_defaults(session)
+    r = get_redis_connection(session)
+
+    keys = r.keys()
+    return jsonify(keys=keys)
+
+
 @app.route('/key/<key>')
 def key(key):
     """ Info for the key. """
@@ -99,11 +110,9 @@ def save(key):
     elif rtype == 'string':
         r.set(key, value)
 
-    #flash(key + ' was saved successfully')
-
     return jsonify(
         flash=key + ' was saved successfully',
-        value=value + 'boobs'
+        value=value
     )
 
 if __name__ == '__main__':

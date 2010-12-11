@@ -8,9 +8,15 @@ function listFilter(header, list) {
             'class': 'filterinput',
             'type': 'search',
             'placeholder': 'Filter'
-        });
+        }),
+        refresh = $('<a>').attr({
+            'href': '/keys',
+            'id': 'refresh_keys',
+            'title': 'refresh available keys'
+        }).text('refresh keys');
 
-    $(form).append(input).appendTo(header);
+
+    $(form).append(refresh).append(input).appendTo(header);
 
     $(input).change(function() {
         var filter = $(this).val();
@@ -26,10 +32,15 @@ function listFilter(header, list) {
 }
 
 jQuery(window).hashchange(function() {
-    var link = '/key/' + window.location.hash.replace('#', '');
-    $.get(link, function(data) {
-        $('#right').html(data);
-    });
+    var hash = window.location.hash.replace('#', '');
+    if (hash != '') {
+        var link = '/key/' + hash;
+        $.get(link, function(data) {
+            $('#right').html(data);
+        });
+    } else {
+        $('#right').empty();
+    }
 });
 
 $(function() {
@@ -59,4 +70,19 @@ $(function() {
     $('#id_redis_db').live('change', function() {
         $(this).parent().parent('form').submit();
     });
+
+    $('#refresh_keys').live('click', function(e) {
+        var link = $(this).attr('href');
+        e.preventDefault();
+        $.get(link, function(data) {
+            $('#keylist').empty();
+            keys = []
+            for (i in data['keys']) {
+                keys.push('<li><a href="/key/' + data['keys'][i] + '">' + data['keys'][i] + '</a></li>');
+            }
+            $('#keylist').append(keys.join(''));
+            window.location.hash = '';
+        });
+    });
+
 });
