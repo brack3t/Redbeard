@@ -30,7 +30,7 @@ def logout():
 def change_db():
     """
     View to handle changing the redis db. Make sure val is an int
-    and withing the redis db range.
+    and within the redis db range.
     """
     if request.method == 'POST':
         try:
@@ -38,7 +38,7 @@ def change_db():
         except ValueError:
             return redirect(url_for('index'))
 
-        if db >= 0 and db <= 9:
+        if db in xrange(0,10):
             session['redis_db'] = db
             flash('Redis DB changed to ' + str(db))
     return redirect(url_for('index'))

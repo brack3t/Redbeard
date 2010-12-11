@@ -36,7 +36,7 @@
 		<fieldset>
 			<label for="id_redis_db">Current Redis DB:</label>
 			<select id="id_redis_db" name="redis_db">
-				{% for number in range(0, 9) %}
+				{% for number in range(0, 10) %}
 				<option value="{{ number }}" {% if number == session.redis_db %}selected{% endif %}>{{ number }}</option>
 				{% endfor %}
 			</select>
