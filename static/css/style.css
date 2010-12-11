@@ -164,10 +164,23 @@ h1 {
 footer {
   clear:both;
   color:rgba(0,0,0,0.75);
-  text-align:center;
   margin:20px 0;
+  text-align:center;
+  text-transform:uppercase;
 }
   footer a {
     color:rgb(133, 27, 31);
     text-decoration:none;
   }
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb:vertical,
+::-webkit-scrollbar-thumb:horizontal {
+  background-color: rgba(200, 200, 200, 0.5);
+  -webkit-border-radius: 6px;
+}
+
+
