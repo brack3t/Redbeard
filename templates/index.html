@@ -1,16 +1,9 @@
 {% extends "layout.html" %}
 
 {% block leftblock %}
-<form action="{{ url_for('change_db') }}" method="post">
-	<label for="redis_db">Redis DB:</label>
-	<select id="redis_db" name="redis_db">
-		{% for number in range(0, 9) %}
-		<option value="{{ number }}" {% if number == session.redis_db %}selected{% endif %}>{{ number }}</option>
-		{% endfor %}
-	</select>
-</form>
-
-<h2 id="keyheader">Keys</h2>
+<header id="keyheader">
+	<h1>Keys</h1>
+</header>
 <ul id="keylist">
 	{% for key in keys %}
 	<li><a href="{{ url_for('key', key=key) }}">{{ key }}</a></li>

@@ -74,6 +74,8 @@ def key(key):
         output = r.smembers(key)
     elif rtype == 'zset':
         output = r.zrange(key, 0, -1, withscores=True)
+    elif rtype == 'list':
+        output = [r.lindex(key, n) for n in xrange(r.llen(key))]
     else:
         output = r.get(key)
     return render_template('key.html', rtype=rtype, key=key, output=output)

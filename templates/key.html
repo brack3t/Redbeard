@@ -1,17 +1,14 @@
-<ul id="flashes"></ul>
-
 <article>
 	<header>
-		<h1>{{ key }}</h1>
 		<h2>{{ rtype }}</h2>
 	</header>
 	<form action="{{ url_for('save', key=key) }}" method="post" 
 		id="key">
 		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
 		<br>
-		<input type="submit" value="save">
+		<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
+		<input type="submit" value="save" title="save">
 	</form>
-	<a id="refresh" href="{{ url_for('key', key=key) }}">refresh</a>
 </article>
 
 <script>
