@@ -11,8 +11,10 @@ app.debug = True
 
 def get_redis_connection(session):
     """ Get Redis connection with session values """
-    return redis.Redis(host=session['redis_host'], port=session['redis_port'],
-        db=session['redis_db'])
+    return redis.Redis(
+        host=session.get('redis_host', settings.REDIS_HOST),
+        port=session.get('redis_port', settings.REDIS_PORT),
+        db=session.get('redis_db', settings.REDIS_DB))
 
 def set_session_defaults(session):
     """ Setup default session """
@@ -22,8 +24,10 @@ def set_session_defaults(session):
 
 @app.route('/logout/')
 def logout():
-    if session.has_key('redis_db'):
-        session.pop('redis_db', None)
+    if session:
+        for key in session.keys():
+            session.pop(key)
+
     return redirect(url_for('index'))
 
 @app.route('/change_db', methods=['GET', 'POST'])
@@ -42,7 +46,6 @@ def change_db():
             session['redis_db'] = db
             flash('Redis DB changed to ' + str(db))
     return redirect(url_for('index'))
-
 
 @app.route('/info/')
 def info():
