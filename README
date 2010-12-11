@@ -20,7 +20,7 @@ and load "http://127.0.0.1:5000" in your browser of choice.
 USAGE
 =====
 Redbeard allows you to view and edit (some) redis keys. Select the database
-from the dropdown, click on the key in the list on the left size and edit the
+from the dropdown, click on the key in the list on the left side and edit the
 values on the right.  Currently only *hashes* and *strings* can be edited but 
 the other datatypes will follow soon.  Click the save icon to save the key or
 the refresh button to load the new value if it may have changed elsewhere.
