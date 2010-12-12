@@ -5,10 +5,11 @@
 	<form action="{{ url_for('save', key=key) }}" method="post" 
 		id="key">
 		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
-		<br>
-		<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
-		<a id="delete" href="{{ url_for('delete', key=key) }}" title="delete">delete</a>
-		<input type="submit" value="save" title="save">
+		<div id="controls">
+			<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
+			<a id="delete" href="{{ url_for('delete', key=key) }}" title="delete">delete</a>
+			<input type="submit" value="save" title="save">
+		</div>
 	</form>
 </article>
 
@@ -62,7 +63,6 @@
 				},
 				dataType: "json",
 				success: function(data) {
-					console.log(data);
 					$(this).find("textarea").val(data['value']);
 					$("<li>").text(data['flash']).appendTo(flashes);
 				}

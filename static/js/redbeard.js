@@ -31,7 +31,7 @@ function listFilter(header, list) {
     });
 }
 
-jQuery(window).hashchange(function() {
+$(window).hashchange(function() {
     var hash = window.location.hash.replace('#', '');
     if (hash != '') {
         var link = '/key/' + hash;
