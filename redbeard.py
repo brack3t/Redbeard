@@ -43,7 +43,6 @@ def change_db():
             flash('Redis DB changed to ' + str(db))
     return redirect(url_for('index'))
 
-
 @app.route('/info/')
 def info():
     """ View for info about your redis set up. """
@@ -71,7 +70,6 @@ def keys():
 
     keys = r.keys()
     return jsonify(keys=keys)
-
 
 @app.route('/key/<key>')
 def key(key):
