@@ -161,13 +161,20 @@ h1 {
     width:32px;
   }
 
-  #refresh {
+  #refresh, #delete {
     background:url('../img/reload.png') center center no-repeat;
     display:block;
     float:right;
     height:28px;
     text-indent:-99999px;
     width:24px;
+  }
+
+  #delete {
+    background:url('../img/delete.png') center center no-repeat;
+    height:28px;
+    margin-right:220px;
+    width:28px;
   }
     
 

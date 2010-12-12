@@ -7,6 +7,7 @@
 		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
 		<br>
 		<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
+		<a id="delete" href="{{ url_for('delete', key=key) }}" title="delete">delete</a>
 		<input type="submit" value="save" title="save">
 	</form>
 </article>
@@ -21,6 +22,28 @@
             	$('#right').html(data);
             	window.location.hash = hash;
         	});
+		});
+
+		$("#delete").live('click', function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			var link = $(this).attr("href"),
+				flashes = $("#flashes");
+
+			flashes.empty();
+
+			if (confirm('Are you sure you want to delete this key?')) {
+				$.ajax({
+					url: link,
+					dataType: "json",
+					success: function(data) {
+						$("<li>").text(data['flash']).appendTo(flashes);
+						$("#keylist li.current").remove();
+						window.location.hash = '';
+					}
+				});
+			}
 		});
 
     	$("#key").submit(function(e) {
