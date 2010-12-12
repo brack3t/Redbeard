@@ -75,7 +75,6 @@ def keys():
     keys = r.keys()
     return jsonify(keys=keys)
 
-
 @app.route('/key/<key>')
 def key(key):
     """ Info for the key. """

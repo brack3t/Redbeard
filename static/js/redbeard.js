@@ -45,6 +45,7 @@ jQuery(window).hashchange(function() {
 
 $(function() {
 	listFilter($('#keyheader'), $('#keylist'));
+    $(".filterform").live('submit', function(e) { e.preventDefault(); });
 
     if (window.location.hash) {
         var link = '/key/' + window.location.hash.replace('#', '');
