@@ -118,5 +118,16 @@ def save(key):
         value=value
     )
 
+@app.route('/key/delete/<key>', methods=['GET'])
+def delete(key):
+    """ Delete key """
+    r = get_redis_connection(session)
+
+    if r.exists(key):
+        r.delete(key)
+        return jsonify(flash="Key '" + key + "' was deleted successfully")
+    else:
+        return jsonify(flash="Key '" + key + "' was not found in Redis")
+
 if __name__ == '__main__':
     app.run()
