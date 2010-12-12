@@ -103,33 +103,28 @@ def save(key):
     value = request.form['value']
 
     if rtype == 'hash':
-        r.delete(key)
-
         value = request.form['value'].strip("{}")
         values = [k.split(':', 1) for k in value.split(',')]
+
+        r.delete(key)
         for k, v in values:
             r.hset(key, k.strip("' "), v.strip("' "))
 
     elif rtype == 'set':
-        r.delete(key)
-
         value = request.form['value'].strip("set([])")
+
+        r.delete(key)
         for k in value.split(','):
             r.sadd(key, k.strip(" '\""))
 
     elif rtype == 'list':
-        r.delete(key)
-
         value = request.form['value'].strip("[]")
 
+        r.delete(key)
         for k in value.split(','):
             r.rpush(key, k.strip().strip("'"))
 
     elif rtype == 'zset':
-        r.delete(key)
-        import pdb
-        #pdb.set_trace()
-
         value = request.form['value'].strip('[]')
         regex = re.compile('(?P<key>\(.*\))(?P<comma>,\s)(?P<value>\(.*\))')
         matches = re.search(regex, value)
@@ -137,6 +132,7 @@ def save(key):
 
         values_list = [k.split() for k in values]
 
+        r.delete(key)
         for k, v in values_list:
             k, v = k.strip("(' ,)"), v.strip("(' ,)")
             r.zadd(key, k, v)
