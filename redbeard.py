@@ -109,13 +109,21 @@ def save(key):
         for k, v in values:
             r.hset(key, k.strip("' "), v.strip("' "))
 
-    if rtype == 'set':
+    elif rtype == 'set':
         r.delete(key)
 
         value = request.form['value'].strip("set([])")
         values = [k.split(':', 1) for k in value.split(',')]
         for k, v in values:
             r.sadd(key, '%s:%s' % (k, v))
+
+    elif rtype == 'list':
+        r.delete(key)
+
+        value = request.form['value'].strip("[]")
+
+        for k in value.split(','):
+            r.rpush(key, k)
 
     elif rtype == 'string':
         r.set(key, value)
