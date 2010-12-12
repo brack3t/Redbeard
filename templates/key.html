@@ -15,6 +15,8 @@
 
 <script>
 	$(function() {
+		var flashes = $("#flashes");
+
 		$("#refresh").live('click', function(e) {
         	var link = $(this).attr('href'),
             	hash = link.replace("/key/", "");
@@ -26,22 +28,20 @@
 		});
 
 		$("#delete").live('click', function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-
 			var link = $(this).attr("href"),
-				flashes = $("#flashes");
+				confirmation = confirm('Are you sure you want to delete this key?');
+
+			e.preventDefault();
 
 			flashes.empty();
 
-			if (confirm('Are you sure you want to delete this key?')) {
+			if (confirmation) {
 				$.ajax({
 					url: link,
 					dataType: "json",
 					success: function(data) {
 						$("<li>").text(data['flash']).appendTo(flashes);
-						$("#keylist li.current").remove();
-						window.location.hash = '';
+						$("#refresh_keys").trigger('click');
 					}
 				});
 			}
