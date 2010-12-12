@@ -1,4 +1,5 @@
 html {
+  background:rgb(250, 250, 250);
   background: -webkit-gradient(
       linear, left top, left bottom,
       color-stop(0, rgb(255,255,255)),
@@ -62,6 +63,7 @@ h1 {
       }
 
 #switch_db {
+  background:rgb(204, 204, 204);
   background: -webkit-gradient(
     linear, left top, left bottom,
     color-stop(0, rgb(150, 150, 150)),
@@ -77,6 +79,7 @@ h1 {
   padding:10px;
   -moz-box-shadow:0 2px 4px rgba(0,0,0,0.4);
   -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.4);
+  box-shadow:0 2px 4px rgba(0,0,0,0.4);
 }
   #switch_db fieldset {
     overflow:hidden;
@@ -97,6 +100,7 @@ h1 {
   list-style:none;
   -moz-box-shadow:0 2px 4px rgba(0,0,0,0.4);
   -webkit-box-shadow:0 2px 4px rgba(0,0,0,0.4);
+  box-shadow:0 2px 4px rgba(0,0,0,0.4);
 }
   #flashes li { padding:5px 10px; }
 
