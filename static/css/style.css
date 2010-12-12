@@ -155,6 +155,7 @@ h1 {
         color:#333;
         display:block;
         text-decoration:none;
+        word-break:break-all;
       }
 
 #right {
