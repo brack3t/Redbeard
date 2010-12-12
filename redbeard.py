@@ -1,3 +1,4 @@
+import re
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask import session, jsonify
 import redis
@@ -113,9 +114,8 @@ def save(key):
         r.delete(key)
 
         value = request.form['value'].strip("set([])")
-        values = [k.split(':', 1) for k in value.split(',')]
-        for k, v in values:
-            r.sadd(key, '%s:%s' % (k, v))
+        for k in value.split(','):
+            r.sadd(key, k.strip(" '\""))
 
     elif rtype == 'list':
         r.delete(key)
@@ -123,7 +123,23 @@ def save(key):
         value = request.form['value'].strip("[]")
 
         for k in value.split(','):
-            r.rpush(key, k)
+            r.rpush(key, k.strip().strip("'"))
+
+    elif rtype == 'zset':
+        r.delete(key)
+        import pdb
+        #pdb.set_trace()
+
+        value = request.form['value'].strip('[]')
+        regex = re.compile('(?P<key>\(.*\))(?P<comma>,\s)(?P<value>\(.*\))')
+        matches = re.search(regex, value)
+        values = [match for match in matches.groups() if match != ', ']
+
+        values_list = [k.split() for k in values]
+
+        for k, v in values_list:
+            k, v = k.strip("(' ,)"), v.strip("(' ,)")
+            r.zadd(key, k, v)
 
     elif rtype == 'string':
         r.set(key, value)
