@@ -28,10 +28,11 @@
 		});
 
 		$("#delete").live('click', function(e) {
+			e.stopPropagation();
+			e.preventDefault();
+
 			var link = $(this).attr("href"),
 				confirmation = confirm('Are you sure you want to delete this key?');
-
-			e.preventDefault();
 
 			flashes.empty();
 
