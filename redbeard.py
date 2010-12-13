@@ -2,6 +2,7 @@ import re
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask import session, jsonify
 import redis
+from redis.exceptions import ConnectionError
 import settings
 
 SECRET_KEY = '781b0650af13493089a6ffafac755a61'
@@ -11,11 +12,21 @@ app.config.from_object(__name__)
 app.debug = True
 
 def get_redis_connection(session):
-    """ Get Redis connection with session values """
-    return redis.Redis(
+    """
+    Get Redis connection with session values. Ping Redis
+    to make sure connection is working.
+    """
+    r = redis.Redis(
         host=session.get('redis_host', settings.REDIS_HOST),
         port=session.get('redis_port', settings.REDIS_PORT),
         db=session.get('redis_db', settings.REDIS_DB))
+
+    try:
+        r.ping()
+    except ConnectionError:
+        return None
+
+    return r
 
 def set_session_defaults(session):
     """ Setup default session """
@@ -52,9 +63,34 @@ def change_db():
 def info():
     """ View for info about your redis set up. """
     r = get_redis_connection(session)
+    if not r:
+        return redirect(url_for('setup'))
+
     info = r.info().items()
 
     return render_template('info.html', info=info)
+
+@app.route('/setup/', methods=['GET', 'POST'])
+def setup():
+    """
+    If a connection error with Redis occurs, users will be redirected
+    here to setup the connection information.
+    """
+    if request.method == 'POST':
+        host = request.form['host'] or settings.REDIS_HOST
+        try:
+            port = int(request.form['port'])
+        except ValueError:
+            port = settings.REDIS_PORT
+            flash('Port number must be an integer. Default used.')
+
+        session['redis_host'] = host
+        session['redis_port'] = port
+
+        return redirect(url_for('index'))
+
+
+    return render_template('setup.html')
 
 @app.route('/')
 def index():
@@ -62,6 +98,9 @@ def index():
     if not session.has_key('redis_db'):
         set_session_defaults(session)
     r = get_redis_connection(session)
+
+    if not r:
+        return redirect(url_for('setup'))
 
     keys = r.keys()
     return render_template('index.html', keys=keys)
@@ -73,6 +112,9 @@ def keys():
         set_session_defaults(session)
     r = get_redis_connection(session)
 
+    if not r:
+        return redirect(url_for('setup'))
+
     keys = r.keys()
     return jsonify(keys=keys)
 
@@ -80,6 +122,9 @@ def keys():
 def key(key):
     """ Info for the key. """
     r = get_redis_connection(session)
+
+    if not r:
+        return redirect(url_for('setup'))
 
     rtype = r.type(key)
     if rtype == 'hash':
@@ -98,6 +143,9 @@ def key(key):
 def save(key):
     """ Update the value of a key. """
     r = get_redis_connection(session)
+
+    if not r:
+        return redirect(url_for('setup'))
 
     rtype = r.type(key)
     value = request.form['value']
@@ -149,6 +197,9 @@ def save(key):
 def delete(key):
     """ Delete key """
     r = get_redis_connection(session)
+
+    if not r:
+        return redirect(url_for('setup'))
 
     if r.exists(key):
         r.delete(key)
