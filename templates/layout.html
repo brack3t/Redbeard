@@ -14,11 +14,15 @@
 <body>
 	<header id="masthead">
 	{% block header %}
-		<h1 id="logo">RedBeard</h1>
+		<a href="{{ url_for('index') }}">
+			<h1 id="logo">RedBeard</h1>
+		</a>
 		{% if session %}
 		<aside>
 			<header>
-			<h2><a href="{{ url_for('setup') }}">Redis connection info</a></h2>
+				<a href="{{ url_for('setup') }}">
+					<h2>Redis connection info</h2>
+				</a>
 			</header>
 			<dl>
 				<dt>Host:</dt>

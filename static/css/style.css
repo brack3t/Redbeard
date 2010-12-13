@@ -32,6 +32,12 @@ h1 {
   line-height:18px;
 }
 
+a {
+  color:rgb(133, 27, 31);
+  text-decoration:none;
+}
+a:hover { text-decoration:underline; }
+
 #masthead {
   overflow:hidden;
   padding:10px;
@@ -197,7 +203,19 @@ h1 {
     margin-left:-14px;
     width:28px;
   }
-    
+
+  #setup_form {
+    margin:10px 0;
+  }
+    #setup_form fieldset {
+      font-weight:bold;
+      margin-bottom:10px;
+    }
+    #setup_form input[type=text] {
+      border:1px solid rgba(30,30,30,0.5);
+      padding:1em;
+      width:100%;
+    }
 
 footer {
   clear:both;
