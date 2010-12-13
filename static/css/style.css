@@ -32,6 +32,12 @@ h1 {
   line-height:18px;
 }
 
+a {
+  color:rgb(133, 27, 31);
+  text-decoration:none;
+}
+a:hover { text-decoration:underline; }
+
 #masthead {
   overflow:hidden;
   padding:10px;
