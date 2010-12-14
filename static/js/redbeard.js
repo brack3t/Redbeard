@@ -38,6 +38,9 @@ $(window).hashchange(function() {
         $.get(link, function(data) {
             $('#right').html(data);
         });
+        $('li', '#keylist').removeClass('current');
+        $('a[href=' + link + ']', '#keylist').parent('li').addClass('current');
+        $('#keylist').scrollTo('.current');
     } else {
         $('#right').empty();
     }
@@ -54,6 +57,7 @@ $(function() {
         $.get(link, function(data) {
             $('#right').html(data);
         });
+        $('#keylist').scrollTo('.current');
     }
 
     $('a', '#keylist').live('click', function(e) {
@@ -85,13 +89,4 @@ $(function() {
             window.location.hash = '';
         });
     });
-
-    //$('#new_key').live('click', function(e) {
-    //    var link = $(this).attr('href');
-    //    e.preventDefault();
-    //    $.get(link, function(data) {
-    //        $('#right').html(data);
-    //    });
-    //});
-
 });
