@@ -100,6 +100,10 @@ a:hover { text-decoration:underline; }
     vertical-align:middle;
   }
 
+  #switch_db #new_key {
+    float:right;
+  }
+
 #flashes {
   background:#999;
   color:#fff;
@@ -204,14 +208,14 @@ a:hover { text-decoration:underline; }
     width:28px;
   }
 
-  #setup_form {
+  #setup_form, #new_key_form {
     margin:10px 0;
   }
-    #setup_form fieldset {
+    #setup_form fieldset, #new_key_form {
       font-weight:bold;
       margin-bottom:10px;
     }
-    #setup_form input[type=text] {
+    #setup_form input[type=text], #new_key_form input[type=text] {
       border:1px solid rgba(30,30,30,0.5);
       padding:1em;
       width:100%;

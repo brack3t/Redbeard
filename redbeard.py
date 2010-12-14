@@ -1,8 +1,13 @@
 import re
+
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask import session, jsonify
+
+from flaskext.wtf import Form, TextField, Required
+
 import redis
 from redis.exceptions import ConnectionError
+
 import settings
 
 SECRET_KEY = '781b0650af13493089a6ffafac755a61'
@@ -10,6 +15,33 @@ SECRET_KEY = '781b0650af13493089a6ffafac755a61'
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.debug = True
+
+# Forms
+class StringForm(Form):
+    key_name = TextField('Key', validators=[Required()])
+    key_value = TextField('Value', validators=[Required()])
+
+@app.route('/new', methods=['GET', 'POST'])
+def new_key():
+    form = StringForm(request.form or None)
+    if request.method == 'POST':
+        if form.validate():
+            key = request.form['key_name']
+            value = request.form['key_value']
+
+            r = get_redis_connection(session)
+            if not r:
+                return redirect(url_for('setup'))
+
+            if r.exists(key):
+                return jsonify(flash=key + ' already exists.')
+
+            r.set(key, value)
+            return jsonify(flash=key + ' was saved successfully.')
+        else:
+            return jsonify(flash='Motherfuckin\' Errors!')
+
+    return render_template('new_key.html', form=form)
 
 def get_redis_connection(session):
     """

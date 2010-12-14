@@ -4,9 +4,7 @@
 	<meta charset="utf-8">
 	<title>{% block title %}Redbeard{% endblock %}</title>
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/html5reset-1.6.1.css') }}" 
-	media="screen" charset="utf-8">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/html5reset-1.6.1.css') }}" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" media="screen" charset="utf-8">
 	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.4.4.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/modernizr-1.6.min.js') }}"></script>
@@ -45,6 +43,7 @@
 				<option value="{{ number }}" {% if number == session.redis_db %}selected{% endif %}>{{ number }}</option>
 				{% endfor %}
 			</select>
+			<a href="/new" id="new_key">New Key</a>
 		</fieldset>
 	</form>
 
