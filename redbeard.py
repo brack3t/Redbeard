@@ -24,24 +24,23 @@ class StringForm(Form):
 @app.route('/new', methods=['GET', 'POST'])
 def new_key():
     form = StringForm(request.form or None)
-    if request.method == 'POST':
-        if form.validate():
-            key = request.form['key_name']
-            value = request.form['key_value']
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        value = request.form['key_value']
 
-            r = get_redis_connection(session)
-            if not r:
-                return redirect(url_for('setup'))
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
 
-            if r.exists(key):
-                return jsonify(flash=key + ' already exists.')
+        if r.exists(key):
+            return jsonify(flash=key + ' already exists.')
 
-            try:
-                r.set(key, value)
-                flash('%s was saved successfully.' % key)
-                return redirect('#%s' % key)
-            except:
-                return jsonify(flash=key + ' was not saved successfully.')
+        try:
+            r.set(key, value)
+            flash('%s was saved successfully.' % key)
+            return redirect('#%s' % key)
+        except:
+            return jsonify(flash=key + ' was not saved successfully.')
 
     return render_template('new_key.html', form=form)
 
@@ -160,18 +159,21 @@ def key(key):
     if not r:
         return redirect(url_for('setup'))
 
-    rtype = r.type(key)
-    if rtype == 'hash':
-        output = r.hgetall(key)
-    elif rtype == 'set':
-        output = r.smembers(key)
-    elif rtype == 'zset':
-        output = r.zrange(key, 0, -1, withscores=True)
-    elif rtype == 'list':
-        output = [r.lindex(key, n) for n in xrange(r.llen(key))]
+    if r.exists(key):
+        rtype = r.type(key)
+        if rtype == 'hash':
+            output = r.hgetall(key)
+        elif rtype == 'set':
+            output = r.smembers(key)
+        elif rtype == 'zset':
+            output = r.zrange(key, 0, -1, withscores=True)
+        elif rtype == 'list':
+            output = [r.lindex(key, n) for n in xrange(r.llen(key))]
+        else:
+            output = r.get(key)
+        return render_template('key.html', rtype=rtype, key=key, output=output)
     else:
-        output = r.get(key)
-    return render_template('key.html', rtype=rtype, key=key, output=output)
+        return render_template('no_key.html', key=key)
 
 @app.route('/key/save/<key>', methods=['POST'])
 def save(key):
