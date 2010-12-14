@@ -30,22 +30,30 @@
 		$("#delete").live('click', function(e) {
 			e.stopPropagation();
 			e.preventDefault();
-
-			var link = $(this).attr("href"),
-				confirmation = confirm('Are you sure you want to delete this key?');
-
-			flashes.empty();
-
-			if (confirmation) {
-				$.ajax({
-					url: link,
-					dataType: "json",
-					success: function(data) {
-						$("<li>").text(data['flash']).appendTo(flashes);
-						$("#refresh_keys").trigger('click');
+			var link = $(this).attr("href");
+			$.confirm({
+				'title': 'Delete Confirmation',
+				'message': 'Are you sure you want to delete this key?',
+				'buttons': {
+					'Yes': {
+						'class': 'go',
+						'action': function() {
+							$.ajax({
+								url: link,
+								dataType: "json",
+								success: function(data) {
+									flashes.empty();
+									$("<li>").text(data['flash']).appendTo(flashes);
+									$("#refresh_keys").trigger('click');
+								}
+							});
+						}
+					},
+					'No': {
+						'class': 'stop'
 					}
-				});
-			}
+				}
+			});
 		});
 
     	$("#key").submit(function(e) {

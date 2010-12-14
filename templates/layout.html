@@ -4,10 +4,9 @@
 	<meta charset="utf-8">
 	<title>{% block title %}Redbeard{% endblock %}</title>
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/html5reset-1.6.1.css') }}" 
-	media="screen" charset="utf-8">
-	<link rel="stylesheet" href="{{ url_for('static', filename='css/grid.css') }}" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/html5reset-1.6.1.css') }}" media="screen" charset="utf-8">
 	<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" media="screen" charset="utf-8">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.confirm.css') }}" media="screen" charset="utf-8">
 	<script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.4.4.min.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='js/modernizr-1.6.min.js') }}"></script>
 </head>
@@ -71,6 +70,7 @@
 		<p>&copy; <a href="http://brack3t.com">Brack3t</a>. Design by veddermatic. Icons from <a 
 				href="http://somerandomdude.com/projects/iconic/">Iconic</a>.</p>
 	</footer>
+	<script src="{{ url_for('static', filename='js/jquery.confirm.js') }}"></script>
 	{% block extra_scripts %}{% endblock %}
 </body>
 </html>
