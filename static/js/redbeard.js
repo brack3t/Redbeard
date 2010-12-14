@@ -86,12 +86,12 @@ $(function() {
         });
     });
 
-    $('#new_key').live('click', function(e) {
-        var link = $(this).attr('href');
-        e.preventDefault();
-        $.get(link, function(data) {
-            $('#right').html(data);
-        });
-    });
+    //$('#new_key').live('click', function(e) {
+    //    var link = $(this).attr('href');
+    //    e.preventDefault();
+    //    $.get(link, function(data) {
+    //        $('#right').html(data);
+    //    });
+    //});
 
 });

@@ -38,6 +38,16 @@ a {
 }
 a:hover { text-decoration:underline; }
 
+.errors {
+  list-style:none;
+}
+  .errors li {
+    background:rgb(133, 27, 31);
+    color: #fff;
+    margin-top:10px;
+    padding:10px;
+  }
+
 #masthead {
   overflow:hidden;
   padding:10px;
@@ -217,8 +227,8 @@ a:hover { text-decoration:underline; }
     }
     #setup_form input[type=text], #new_key_form input[type=text] {
       border:1px solid rgba(30,30,30,0.5);
-      padding:1em;
-      width:100%;
+      padding:1em 2%;
+      width:96%;
     }
 
 footer {

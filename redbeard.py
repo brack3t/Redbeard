@@ -36,10 +36,12 @@ def new_key():
             if r.exists(key):
                 return jsonify(flash=key + ' already exists.')
 
-            r.set(key, value)
-            return jsonify(flash=key + ' was saved successfully.')
-        else:
-            return jsonify(flash='Motherfuckin\' Errors!')
+            try:
+                r.set(key, value)
+                flash('%s was saved successfully.' % key)
+                return redirect('#%s' % key)
+            except:
+                return jsonify(flash=key + ' was not saved successfully.')
 
     return render_template('new_key.html', form=form)
 
