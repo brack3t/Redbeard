@@ -1,0 +1,43 @@
+<article>
+	<header>
+		<h1>Add New Key</h1>
+	</header>
+	<form action="/new" method="post" id="new_key_form">
+		{{ form.csrf }}
+		{{ form.key_name.label }}: {{ form.key_name }}
+		<br>
+		{{ form.key_value.label }}: {{ form.key_value }}
+		<br>
+		<input type="submit" value="Submit">
+	</form>
+
+</article>
+
+<script>
+	$(function() {
+
+		$("#new_key_form").submit(function(e) {
+			e.preventDefault();
+
+			var link = $(this).attr("action"),
+				flashes = $("#flashes");
+
+			flashes.empty();
+
+			$.ajax({
+				url: link,
+				type: "POST",
+				data: {
+					"key_name": $(this).find("input#key_name").val(),
+					"key_value": $(this).find("input#key_value").val()
+				},
+				dataType: "json",
+				success: function(data) {
+					$("<li>").text(data['flash']).appendTo(flashes);
+				}
+			});
+		});
+
+	});
+
+</script>
