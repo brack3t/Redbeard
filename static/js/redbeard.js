@@ -9,6 +9,14 @@ function listFilter(header, list) {
             'type': 'search',
             'placeholder': 'Filter'
         }),
+        controls = $('<div>').attr({
+            'id': 'key_controls'
+        }),
+        add_key = $('<a>').attr({
+            'href': '/new',
+            'id': 'add_key',
+            'title': 'add new key'
+        }).text('add new key');
         refresh = $('<a>').attr({
             'href': '/keys',
             'id': 'refresh_keys',
@@ -16,7 +24,8 @@ function listFilter(header, list) {
         }).text('refresh keys');
 
 
-    $(form).append(refresh).append(input).appendTo(header);
+    $(controls).append(add_key).append(refresh);
+    $(form).append(input).append(controls).appendTo(header);
 
     $(input).change(function() {
         var filter = $(this).val();

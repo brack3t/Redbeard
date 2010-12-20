@@ -138,15 +138,26 @@ a:hover { text-decoration:underline; }
   }
   #keyheader h1 {
     float:left;
+    margin-right:10px;
   }
   .filterform {
-    float:right;
   }
     .filterform input[type=search] {
-      width:250px;
+      width:125px;
+    }
+    #key_controls {
+      float:right;
     }
     #refresh_keys {
       background:url('../img/loop.png') center center no-repeat;
+      display:block;
+      float:left;
+      height:20px;
+      width:12px;
+      text-indent:-99999px;
+    }
+    #add_key {
+      background:url('../img/add.png') center center no-repeat;
       display:block;
       float:left;
       height:20px;
