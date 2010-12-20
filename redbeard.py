@@ -28,6 +28,11 @@ class StringForm(Form):
     key_name = TextField('Key', validators=[Required()])
     key_value = TextField('Value', validators=[Required()])
 
+@app.context_processor
+def get_db_size():
+    r = get_redis_connection(session)
+    return dict(db_size=r.dbsize())
+
 @app.route('/new', methods=['GET', 'POST'])
 def new_key():
     form = StringForm(request.form or None)
