@@ -248,10 +248,30 @@ def save(key):
         value=value
     )
 
-@app.route('/key/new/string', methods=['GET'])
+@app.route('/key/new/string', methods=['GET', 'POST'])
 def new_string():
-    form = StringForm()
-    return render_template('new_string.html', form=form)
+    form = StringForm(request.form or None)
+
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        value = request.form['key_value']
+
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
+
+        if r.exists(key):
+            flash('%s already exists, edit it below' % key)
+            return redirect('#%s' % key)
+
+        try:
+            r.set(key, value)
+            flash('%s was saved successfully.' % key)
+            return redirect('#%s' % key)
+        except:
+            return jsonify(flash=key + ' failed to save.')
+    else:
+        return render_template('new_string.html', form=form)
 
 @app.route('/key/delete/<key>', methods=['GET'])
 def delete(key):

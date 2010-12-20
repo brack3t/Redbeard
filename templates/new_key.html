@@ -5,7 +5,7 @@
 		<h1>Add New Key</h1>
 	</header>
 	{% from "_partials.html" import render_field %}
-	<form action="/new" method="post" id="new_key_form">
+	<form action="{{ url_for('new_string') }}" method="post" id="new_key_form">
 		{{ form.csrf }}
 		{{ render_field(form.key_name) }}
 		{{ render_field(form.key_value) }}
