@@ -100,7 +100,10 @@ a:hover { text-decoration:underline; }
   #switch_db fieldset {
     overflow:hidden;
   }
-  #switch_db select { vertical-align:baseline; }
+  #switch_db input {
+    vertical-align:baseline;
+    width:5em;
+  }
   #switch_db label {
     color:rgb(133, 27, 31);
     font-size:18px;

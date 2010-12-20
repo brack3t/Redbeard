@@ -33,13 +33,6 @@ def get_db_size():
     r = get_redis_connection(session)
     return dict(db_size=r.dbsize())
 
-@app.context_processor
-def get_number_of_dbs():
-    r = get_redis_connection(session)
-    dbs = [int(key[2:]) for key in r.info().keys() if key.startswith('db')]
-    dbs.sort()
-    return dict(db_range=xrange(0, dbs[-1]+1))
-
 @app.route('/new', methods=['GET', 'POST'])
 def new_key():
     form = StringForm(request.form or None)

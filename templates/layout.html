@@ -41,11 +41,7 @@
 	<form action="{{ url_for('change_db') }}" method="post" id="switch_db">
 		<fieldset>
 			<label for="id_redis_db">Current Redis DB:</label>
-			<select id="id_redis_db" name="redis_db">
-				{% for number in db_range %}
-				<option value="{{ number }}" {% if number == session.redis_db %}selected{% endif %}>{{ number }}</option>
-				{% endfor %}
-			</select>
+			<input type="number" name="redis_db" id="id_redis_db" value="{{ session.redis_db }}">
 			<a href="/new" id="new_key">New Key</a>
 		</fieldset>
 	</form>
