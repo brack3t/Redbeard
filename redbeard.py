@@ -106,7 +106,7 @@ def change_db():
         if db in xrange(0,10):
             session['redis_db'] = db
             flash('Redis DB changed to ' + str(db))
-    return redirect(url_for('index'))
+    return redirect(request.referrer)
 
 @app.route('/info/')
 def info():
