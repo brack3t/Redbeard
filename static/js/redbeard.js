@@ -98,4 +98,35 @@ $(function() {
             window.location.hash = '';
         });
     });
+	$("#add_key").live('click', function(e) {
+		e.stopPropagation();
+		e.preventDefault();
+		var link = $(this).attr("href");
+		$.confirm({
+			'title': 'Add new key',
+			'message': 'Choose the new key type',
+			'buttons': {
+				'String': {
+					'action': function() {
+					}
+				},
+				'List': {
+					'action': function() {
+                    }
+				},
+				'Hash': {
+					'action': function() {
+					}
+				},
+				'Set': {
+					'action': function() {
+					}
+				},
+				'Sorted Set': {
+					'action': function() {
+					}
+				}
+			}
+		});
+	});
 });

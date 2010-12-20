@@ -197,6 +197,10 @@ a:hover { text-decoration:underline; }
   margin:20px 0;
   width:50%;
 }
+  #key h2 {
+    font-weight:normal;
+  }
+    #key h2 b { font-weight:bold; }
 
   textarea[name=value] {
     border:1px solid rgba(30,30,30,0.5);
