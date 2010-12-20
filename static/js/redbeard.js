@@ -13,7 +13,7 @@ function listFilter(header, list) {
             'id': 'key_controls'
         }),
         add_key = $('<a>').attr({
-            'href': '/new',
+            'href': '/key/new/string',
             'id': 'add_key',
             'title': 'add new key'
         }).text('add new key');

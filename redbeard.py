@@ -248,6 +248,11 @@ def save(key):
         value=value
     )
 
+@app.route('/key/new/string', methods=['GET'])
+def new_string():
+    form = StringForm()
+    return render_template('new_string.html', form=form)
+
 @app.route('/key/delete/<key>', methods=['GET'])
 def delete(key):
     """ Delete key """
