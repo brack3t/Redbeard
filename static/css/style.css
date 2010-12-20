@@ -192,6 +192,15 @@ a:hover { text-decoration:underline; }
         word-break:break-all;
       }
 
+#cancel {
+  background:url('../img/cancel.png') center center no-repeat;
+  display:inline;
+  float:right;
+  height:32px;
+  text-indent:-99999px;
+  width:32px;
+}
+
 #right {
   float:left;
   margin:20px 0;
@@ -239,7 +248,7 @@ a:hover { text-decoration:underline; }
   #setup_form, #new_key_form {
     margin:10px 0;
   }
-    #setup_form fieldset, #new_key_form {
+    #setup_form fieldset, #new_key_form fieldset {
       font-weight:bold;
       margin-bottom:10px;
     }
