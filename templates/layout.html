@@ -41,7 +41,7 @@
 	<form action="{{ url_for('change_db') }}" method="post" id="switch_db">
 		<fieldset>
 			<label for="id_redis_db">Current Redis DB:</label>
-			<input type="number" name="redis_db" id="id_redis_db" value="{{ session.redis_db }}">
+			<input type="number" name="redis_db" id="id_redis_db" value="{{ session.redis_db }}" min="0">
 		</fieldset>
 	</form>
 
