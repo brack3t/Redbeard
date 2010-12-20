@@ -108,7 +108,8 @@ $(function() {
 			'buttons': {
 				'String': {
 					'action': function() {
-					}
+                        window.location = '/key/new/string';
+                    }
 				},
 				'List': {
 					'action': function() {
@@ -120,7 +121,8 @@ $(function() {
 				},
 				'Set': {
 					'action': function() {
-					}
+                        window.location = '/key/new/set';
+                    }
 				},
 				'Sorted Set': {
 					'action': function() {
