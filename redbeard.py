@@ -2,7 +2,7 @@
 TODO
 """
 __author__ = 'Chris Jones, Kenneth Love'
-__version__ = '0.8.1'
+__version__ = '0.8.5'
 __license__ = 'MIT'
 
 import re
