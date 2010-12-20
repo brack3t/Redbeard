@@ -1,3 +1,10 @@
+"""
+TODO
+"""
+__author__ = 'Chris Jones, Kenneth Love'
+__version__ = '0.8.1'
+__license__ = 'MIT'
+
 import re
 
 from flask import Flask, render_template, redirect, url_for, request, flash
