@@ -171,7 +171,8 @@ def key(key):
             output = [r.lindex(key, n) for n in xrange(r.llen(key))]
         else:
             output = r.get(key)
-        return render_template('key.html', rtype=rtype, key=key, output=output)
+        return render_template('key.html', rtype=rtype, key=key, output=output,
+            ttl=r.ttl(key))
     else:
         return render_template('no_key.html', key=key)
 

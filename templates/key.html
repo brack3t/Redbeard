@@ -1,9 +1,11 @@
 <article>
 	<header>
 		<h2>{{ rtype }}</h2>
+		{% if ttl %}
+		<h3>Key expires in: {{ ttl }} seconds</h3>
+		{% endif %}
 	</header>
-	<form action="{{ url_for('save', key=key) }}" method="post" 
-		id="key">
+	<form action="{{ url_for('save', key=key) }}" method="post" id="key">
 		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
 		<div id="controls">
 			<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
