@@ -13,7 +13,7 @@ from flask import session, jsonify
 from flaskext.wtf import Form, TextField, Required
 
 import redis
-from redis.exceptions import ConnectionError
+from redis.exceptions import ConnectionError, ResponseError
 
 import settings
 
@@ -31,6 +31,9 @@ class StringForm(Form):
 @app.context_processor
 def get_db_size():
     r = get_redis_connection(session)
+    if not r:
+        return {'db_size':0}
+
     return dict(db_size=r.dbsize())
 
 @app.route('/new', methods=['GET', 'POST'])
@@ -64,11 +67,12 @@ def get_redis_connection(session):
     r = redis.Redis(
         host=session.get('redis_host', settings.REDIS_HOST),
         port=session.get('redis_port', settings.REDIS_PORT),
-        db=session.get('redis_db', settings.REDIS_DB))
+        db=session.get('redis_db', settings.REDIS_DB),
+        password=session.get('redis_password', ''))
 
     try:
         r.ping()
-    except ConnectionError:
+    except (ConnectionError, ResponseError):
         return None
 
     return r
@@ -123,6 +127,7 @@ def setup():
     """
     if request.method == 'POST':
         host = request.form['host'] or settings.REDIS_HOST
+        password = request.form['password']
         try:
             port = int(request.form['port'])
         except ValueError:
@@ -131,6 +136,7 @@ def setup():
 
         session['redis_host'] = host
         session['redis_port'] = port
+        session['redis_password'] = password
 
         return redirect(url_for('index'))
 

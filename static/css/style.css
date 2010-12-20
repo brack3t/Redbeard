@@ -228,7 +228,7 @@ a:hover { text-decoration:underline; }
       font-weight:bold;
       margin-bottom:10px;
     }
-    #setup_form input[type=text], #new_key_form input[type=text] {
+    #setup_form input[type=text], #setup_form input[type=password], #new_key_form input[type=text] {
       border:1px solid rgba(30,30,30,0.5);
       padding:1em 2%;
       width:96%;
