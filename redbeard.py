@@ -28,6 +28,13 @@ class StringForm(Form):
     key_name = TextField('Key', validators=[Required()])
     key_value = TextField('Value', validators=[Required()])
 
+class SetForm(Form):
+    """
+    Form for creating a new set
+    """
+    key_name = TextField('Key', validators=[Required()])
+    member = TextField('Member', validators=[Required()])
+
 @app.context_processor
 def get_db_size():
     r = get_redis_connection(session)
@@ -272,6 +279,30 @@ def new_string():
             return jsonify(flash=key + ' failed to save.')
     else:
         return render_template('new_string.html', form=form)
+
+@app.route('/key/new/set', methods=['GET', 'POST'])
+def new_set():
+    """
+    View for creating a new set/member
+    """
+    form = SetForm(request.form or None)
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        member = request.form['member']
+
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
+
+        result = r.sadd(key, member)
+
+        if result:
+            flash('%s was created.' % key)
+        else:
+            flash('%s already contains that member. Nothing changed.' % key)
+        return redirect('#%s' % key)
+
+    return render_template('new_set.html', form=form)
 
 @app.route('/key/delete/<key>', methods=['GET'])
 def delete(key):
