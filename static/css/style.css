@@ -252,10 +252,19 @@ a:hover { text-decoration:underline; }
       font-weight:bold;
       margin-bottom:10px;
     }
-    #setup_form input[type=text], #setup_form input[type=password], #new_key_form input[type=text] {
+    #setup_form input[type=text],
+    #setup_form input[type=password],
+    #new_key_form input[type=text],
+    #new_key_form input[type=number] {
       border:1px solid rgba(30,30,30,0.5);
       padding:1em 2%;
       width:96%;
+    }
+
+    input.optional,
+    textarea.optional {
+      color:#666;
+      border-color:rgba(150, 150, 150, 0.5) !important;
     }
 
 footer {

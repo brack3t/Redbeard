@@ -10,7 +10,7 @@ import re
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask import session, jsonify
 
-from flaskext.wtf import Form, TextField, Required
+from flaskext.wtf import Form, TextField, Required, IntegerField
 
 import redis
 from redis.exceptions import ConnectionError, ResponseError
@@ -27,6 +27,7 @@ app.debug = True
 class StringForm(Form):
     key_name = TextField('Key', validators=[Required()])
     key_value = TextField('Value', validators=[Required()])
+    key_ttl = IntegerField('TTL')
 
 class SetForm(Form):
     """
@@ -35,6 +36,7 @@ class SetForm(Form):
     key_name = TextField('Key', validators=[Required()])
     member = TextField('Member', validators=[Required()])
 
+# Context processors
 @app.context_processor
 def get_db_size():
     r = get_redis_connection(session)
@@ -43,29 +45,7 @@ def get_db_size():
 
     return dict(db_size=r.dbsize())
 
-@app.route('/new', methods=['GET', 'POST'])
-def new_key():
-    form = StringForm(request.form or None)
-    if form.validate_on_submit():
-        key = request.form['key_name']
-        value = request.form['key_value']
-
-        r = get_redis_connection(session)
-        if not r:
-            return redirect(url_for('setup'))
-
-        if r.exists(key):
-            return jsonify(flash=key + ' already exists.')
-
-        try:
-            r.set(key, value)
-            flash('%s was saved successfully.' % key)
-            return redirect('#%s' % key)
-        except:
-            return jsonify(flash=key + ' was not saved successfully.')
-
-    return render_template('new_key.html', form=form)
-
+# Control app flow
 def get_redis_connection(session):
     """
     Get Redis connection with session values. Ping Redis
@@ -115,17 +95,6 @@ def change_db():
             flash('Redis DB changed to ' + str(db))
     return redirect(request.referrer)
 
-@app.route('/info/')
-def info():
-    """ View for info about your redis set up. """
-    r = get_redis_connection(session)
-    if not r:
-        return redirect(url_for('setup'))
-
-    info = r.info().items()
-
-    return render_template('info.html', info=info)
-
 @app.route('/setup/', methods=['GET', 'POST'])
 def setup():
     """
@@ -149,6 +118,18 @@ def setup():
 
 
     return render_template('setup.html')
+
+# Static views
+@app.route('/info/')
+def info():
+    """ View for info about your redis set up. """
+    r = get_redis_connection(session)
+    if not r:
+        return redirect(url_for('setup'))
+
+    info = r.info().items()
+
+    return render_template('info.html', info=info)
 
 @app.route('/')
 def index():
@@ -200,6 +181,30 @@ def key(key):
             ttl=r.ttl(key))
     else:
         return render_template('no_key.html', key=key)
+
+# Read/write views
+@app.route('/new', methods=['GET', 'POST'])
+def new_key():
+    form = StringForm(request.form or None)
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        value = request.form['key_value']
+
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
+
+        if r.exists(key):
+            return jsonify(flash=key + ' already exists.')
+
+        try:
+            r.set(key, value)
+            flash('%s was saved successfully.' % key)
+            return redirect('#%s' % key)
+        except:
+            return jsonify(flash=key + ' was not saved successfully.')
+
+    return render_template('new_key.html', form=form)
 
 @app.route('/key/save/<key>', methods=['POST'])
 def save(key):

@@ -56,7 +56,7 @@ $(window).hashchange(function() {
 });
 
 $(function() {
-	listFilter($('#keyheader'), $('#keylist'));
+    listFilter($('#keyheader'), $('#keylist'));
     $(".filterform").live('submit', function(e) { e.preventDefault(); });
 
     if (window.location.hash) {
@@ -98,37 +98,37 @@ $(function() {
             window.location.hash = '';
         });
     });
-	$("#add_key").live('click', function(e) {
-		e.stopPropagation();
-		e.preventDefault();
-		var link = $(this).attr("href");
-		$.confirm({
-			'title': 'Add new key',
-			'message': 'Choose the new key type',
-			'buttons': {
-				'String': {
-					'action': function() {
+    $("#add_key").live('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var link = $(this).attr("href");
+        $.confirm({
+            'title': 'Add new key',
+            'message': 'Choose the new key type',
+            'buttons': {
+                'String': {
+                    'action': function() {
                         window.location = '/key/new/string';
                     }
-				},
-				'List': {
-					'action': function() {
+                },
+                'List': {
+                    'action': function() {
                     }
-				},
-				'Hash': {
-					'action': function() {
-					}
-				},
-				'Set': {
-					'action': function() {
+                },
+                'Hash': {
+                    'action': function() {
+                    }
+                },
+                'Set': {
+                    'action': function() {
                         window.location = '/key/new/set';
                     }
-				},
-				'Sorted Set': {
-					'action': function() {
-					}
-				}
-			}
-		});
-	});
+                },
+                'Sorted Set': {
+                    'action': function() {
+                    }
+                }
+            }
+        });
+    });
 });
