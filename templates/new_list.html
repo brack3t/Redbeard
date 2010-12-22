@@ -2,10 +2,10 @@
 {% block leftblock %}
 <article>
 	<header>
-		<h1>Add New Set</h1>
+		<h1>Add New List</h1>
 	</header>
 	{% from "_partials.html" import render_field %}
-	<form action="{{ url_for('new_set') }}" method="post" id="new_key_form">
+	<form action="{{ url_for('new_list') }}" method="post" id="new_key_form">
 		{{ form.csrf }}
 		{{ render_field(form.key_name) }}
 		{{ render_field(form.member) }}

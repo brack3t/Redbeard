@@ -113,6 +113,7 @@ $(function() {
                 },
                 'List': {
                     'action': function() {
+                        window.location = '/key/new/list';
                     }
                 },
                 'Hash': {

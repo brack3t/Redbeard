@@ -1,7 +1,7 @@
 Flask==0.6
 Jinja2==2.5.5
 Werkzeug==0.6.2
--e git+https://github.com/andymccurdy/redis-py.git@52f17891a5523505ea1c4881bffc650ad97035bf#egg=redis-2.0.1-py2.6-dev
 wsgiref==0.1.2
 Flask-WTF==0.3.4
 WTForms==0.6.1
+-e git+https://github.com/andymccurdy/redis-py.git@5f99011ae98809ffc569793cd9896c24d1d9ee6b#egg=redis-2.2.1-py2.6-dev

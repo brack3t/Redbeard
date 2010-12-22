@@ -35,7 +35,15 @@ class SetForm(Form):
     """
     key_name = TextField('Key', validators=[Required()])
     member = TextField('Member', validators=[Required()])
-    key_ttl = IntegerField('TTL')
+    key_ttl = IntegerField('TTL (in seconds)')
+
+class ListForm(Form):
+    """
+    Form for creating a new list
+    """
+    key_name = TextField('Key', validators=[Required()])
+    member = TextField('Member', validators=[Required()])
+    key_ttl = IntegerField('TTL (in seconds)')
 
 # Context processors
 @app.context_processor
@@ -268,7 +276,7 @@ def new_string():
     if form.validate_on_submit():
         key = request.form['key_name']
         value = request.form['key_value']
-        ttl = request.form['key_ttl']
+        ttl = int(request.form['key_ttl'])
 
         r = get_redis_connection(session)
         if not r:
@@ -298,25 +306,47 @@ def new_set():
     form = SetForm(request.form or None)
     if form.validate_on_submit():
         key = request.form['key_name']
-        member = request.form['member']
-        ttl = request.form['key_ttl']
+        ttl = int(request.form['key_ttl'])
 
         r = get_redis_connection(session)
         if not r:
             return redirect(url_for('setup'))
 
-        result = r.sadd(key, member)
+        for m in [k for k in request.form.keys() if k.startswith('member')]:
+           r.sadd(key, request.form[m])
 
         if ttl and ttl != 0:
             r.expire(key, ttl)
 
-        if result:
-            flash('%s was created.' % key)
-        else:
-            flash('%s already contains that member. Nothing changed.' % key)
+        flash('%s was created.' % key)
         return redirect('#%s' % key)
 
     return render_template('new_set.html', form=form)
+
+@app.route('/key/new/list', methods=['GET', 'POST'])
+def new_list():
+    """
+    View for creating a new list with members.
+    """
+    form = ListForm(request.form or None)
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        ttl = int(request.form['key_ttl'])
+
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
+
+        for m in [k for k in request.form.keys() if k.startswith('member')]:
+           r.rpush(key, request.form[m])
+
+        if ttl and ttl != 0:
+            r.expire(key, ttl)
+
+        flash('%s was created.' % key)
+        return redirect('#%s' % key)
+
+    return render_template('new_list.html', form=form)
 
 @app.route('/key/delete/<key>', methods=['GET'])
 def delete(key):
