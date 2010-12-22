@@ -29,17 +29,9 @@ class StringForm(Form):
     key_value = TextField('Value', validators=[Required()])
     key_ttl = IntegerField('TTL')
 
-class SetForm(Form):
+class ListSetForm(Form):
     """
-    Form for creating a new set
-    """
-    key_name = TextField('Key', validators=[Required()])
-    member = TextField('Member', validators=[Required()])
-    key_ttl = IntegerField('TTL (in seconds)')
-
-class ListForm(Form):
-    """
-    Form for creating a new list
+    Form for creating a new set or list
     """
     key_name = TextField('Key', validators=[Required()])
     member = TextField('Member', validators=[Required()])
@@ -303,7 +295,7 @@ def new_set():
     """
     View for creating a new set/member
     """
-    form = SetForm(request.form or None)
+    form = ListSetForm(request.form or None)
     if form.validate_on_submit():
         key = request.form['key_name']
         ttl = int(request.form['key_ttl'])
@@ -328,7 +320,7 @@ def new_list():
     """
     View for creating a new list with members.
     """
-    form = ListForm(request.form or None)
+    form = ListSetForm(request.form or None)
     if form.validate_on_submit():
         key = request.form['key_name']
         ttl = int(request.form['key_ttl'])
