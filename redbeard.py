@@ -35,6 +35,7 @@ class SetForm(Form):
     """
     key_name = TextField('Key', validators=[Required()])
     member = TextField('Member', validators=[Required()])
+    key_ttl = IntegerField('TTL')
 
 # Context processors
 @app.context_processor
@@ -267,6 +268,7 @@ def new_string():
     if form.validate_on_submit():
         key = request.form['key_name']
         value = request.form['key_value']
+        ttl = request.form['key_ttl']
 
         r = get_redis_connection(session)
         if not r:
@@ -278,6 +280,9 @@ def new_string():
 
         try:
             r.set(key, value)
+            if ttl and ttl != 0:
+                r.expire(key, ttl)
+
             flash('%s was saved successfully.' % key)
             return redirect('#%s' % key)
         except:
@@ -294,12 +299,16 @@ def new_set():
     if form.validate_on_submit():
         key = request.form['key_name']
         member = request.form['member']
+        ttl = request.form['key_ttl']
 
         r = get_redis_connection(session)
         if not r:
             return redirect(url_for('setup'))
 
         result = r.sadd(key, member)
+
+        if ttl and ttl != 0:
+            r.expire(key, ttl)
 
         if result:
             flash('%s was created.' % key)

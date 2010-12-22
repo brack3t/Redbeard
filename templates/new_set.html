@@ -9,6 +9,7 @@
 		{{ form.csrf }}
 		{{ render_field(form.key_name) }}
 		{{ render_field(form.member) }}
+		{{ render_field(form.key_ttl, type="number", class="optional") }}
 		<a href="{{ url_for('index') }}" id="cancel">cancel</a>
 		<input type="submit" value="Submit">
 	</form>
