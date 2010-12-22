@@ -156,7 +156,8 @@ a:hover { text-decoration:underline; }
       width:12px;
       text-indent:-99999px;
     }
-    #add_key {
+    #add_key,
+    .add_member {
       background:url('../img/add.png') center center no-repeat;
       display:block;
       float:left;
@@ -164,6 +165,14 @@ a:hover { text-decoration:underline; }
       margin-right:10px;
       width:12px;
       text-indent:-99999px;
+    }
+    #members {
+      position:relative;
+    }
+    .add_member {
+      bottom:10px;
+      position:absolute;
+      right:-30px;
     }
   #keylist {
     border:1px solid rgba(30,30,30,0.5);

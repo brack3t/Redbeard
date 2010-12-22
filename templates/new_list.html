@@ -8,7 +8,10 @@
 	<form action="{{ url_for('new_list') }}" method="post" id="new_key_form">
 		{{ form.csrf }}
 		{{ render_field(form.key_name) }}
-		{{ render_field(form.member) }}
+		<fieldset id="members">
+			<a class="add_member">+</a>
+			{{ render_field(form.member) }}
+		</fieldset>
 		{{ render_field(form.key_ttl, type="number", class="optional") }}
 		<a href="{{ url_for('index') }}" id="cancel">cancel</a>
 		<input type="submit" value="Submit">
@@ -18,21 +21,5 @@
 {% endblock %}
 
 {% block extra_scripts %}
-<script>
-	var add_link = $('<a class="add_member">+</a>'),
-		$member = $("#member").parent('fieldset');
-	$(function() {
-		$member.append(add_link);
-		$(".add_member").live('click', function() {
-			var $new_member = $member.clone(),
-				count = $("[id^=member]").length,
-				new_id = $new_member.find('input').attr('id') + '_' + count,
-				$insert_point = $("#key_ttl").parent('fieldset');
-			$("input", $new_member).attr({'id': new_id, 'name': new_id, 'value': ''});
-			$("label", $new_member).attr('for', new_id);
-			$new_member.insertBefore($insert_point);
-			$(this).remove();
-		});
-	});
-</script>
+<script src="{{ url_for('static', filename='js/newkeys.js') }}"></script>
 {% endblock %}
