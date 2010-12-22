@@ -157,7 +157,8 @@ a:hover { text-decoration:underline; }
       text-indent:-99999px;
     }
     #add_key,
-    .add_member {
+    .add_member,
+    .add_member_table {
       background:url('../img/add.png') center center no-repeat;
       display:block;
       float:left;
@@ -169,7 +170,11 @@ a:hover { text-decoration:underline; }
     #members {
       position:relative;
     }
-    .add_member {
+      #members table {
+        width:100%;
+      }
+    .add_member,
+    .add_member_table {
       bottom:10px;
       position:absolute;
       right:-30px;

@@ -118,6 +118,7 @@ $(function() {
                 },
                 'Hash': {
                     'action': function() {
+                        window.location = '/key/new/hash';
                     }
                 },
                 'Set': {

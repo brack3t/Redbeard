@@ -37,6 +37,15 @@ class ListSetForm(Form):
     member = TextField('Member', validators=[Required()])
     key_ttl = IntegerField('TTL (in seconds)')
 
+class HashForm(Form):
+    """
+    Form for creating a hash.
+    """
+    key_name = TextField('Key', validators=[Required()])
+    key_ttl = IntegerField('TTL (in seconds)')
+    member_name = TextField('Member', validators=[Required()])
+    member_value = TextField('Value', validators=[Required()])
+
 # Context processors
 @app.context_processor
 def get_db_size():
@@ -339,6 +348,32 @@ def new_list():
         return redirect('#%s' % key)
 
     return render_template('new_list.html', form=form)
+
+@app.route('/key/new/hash', methods=['GET', 'POST'])
+def new_hash():
+    """
+    View for creating a new list with members.
+    """
+    form = HashForm(request.form or None)
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        ttl = int(request.form['key_ttl'])
+
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
+
+        for m in [k for k in request.form.keys() if k.startswith('member_name')]:
+            v = re.sub('name', 'value', m)
+            r.hset(key, request.form[m], request.form[v])
+
+        if ttl and ttl != 0:
+            r.expire(key, ttl)
+
+        flash('%s was created.' % key)
+        return redirect('#%s' % key)
+
+    return render_template('new_hash.html', form=form)
 
 @app.route('/key/delete/<key>', methods=['GET'])
 def delete(key):

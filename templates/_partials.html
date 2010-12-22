@@ -11,3 +11,32 @@
 	{{ field(**kwargs)|safe }}
 </fieldset>
 {% endmacro %}
+
+{% macro render_keyvalue(field1, field2) %}
+<fieldset>
+	{% if field1.errors or field2.errors %}
+	<ul class="errors">
+		{% for error in field1.errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+		{% for error in field2.errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	<table>
+		<thead>
+			<tr>
+				<th>{{ field1.label }}</th>
+				<th>{{ field2.label }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{ field1(**kwargs)|safe }}</td>
+				<td>{{ field2(**kwargs)|safe }}</td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>
+{% endmacro %}
