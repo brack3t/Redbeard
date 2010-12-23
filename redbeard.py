@@ -10,7 +10,7 @@ import re
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask import session, jsonify
 
-from flaskext.wtf import Form, TextField, Required, IntegerField
+from flaskext.wtf import Form, TextField, Required, IntegerField, FloatField
 
 import redis
 from redis.exceptions import ConnectionError, ResponseError
@@ -45,6 +45,12 @@ class HashForm(Form):
     key_ttl = IntegerField('TTL (in seconds)')
     member_name = TextField('Member', validators=[Required()])
     member_value = TextField('Value', validators=[Required()])
+
+class ZSetForm(StringForm):
+    """
+    Form for creating a ZSet
+    """
+    score = FloatField('Score', validators=[Required()])
 
 # Context processors
 @app.context_processor
@@ -374,6 +380,41 @@ def new_hash():
         return redirect('#%s' % key)
 
     return render_template('new_hash.html', form=form)
+
+@app.route('/key/new/zset', methods=['GET', 'POST'])
+def new_zset():
+    """
+    View for creating a new zset
+    """
+    form = ZSetForm(request.form or None)
+    if form.validate_on_submit():
+        key = request.form['key_name']
+        value = request.form['key_value']
+        key_ttl = request.form['key_ttl']
+        score = request.form['score']
+
+        try:
+            score = float(score)
+        except ValueError:
+            flash('Score must be an int or float')
+            return render_template('new_zset.html', form=form)
+
+        r = get_redis_connection(session)
+        if not r:
+            return redirect(url_for('setup'))
+
+        r.zadd(key, value, score)
+
+        try:
+            key_ttl = int(key_ttl)
+            r.expire(key, key_ttl)
+        except ValueError:
+            pass
+
+        flash('%s was created.' % key)
+        return redirect('#%s' % key)
+
+    return render_template('new_zset.html', form=form)
 
 @app.route('/key/delete/<key>', methods=['GET'])
 def delete(key):
