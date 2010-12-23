@@ -2,13 +2,13 @@
 {% block leftblock %}
 <article>
 	<header>
-		<h1>Add New ZSet</h1>
+		<h1>Add New Sorted Set</h1>
 	</header>
 	{% from "_partials.html" import render_field %}
 	<form action="{{ url_for('new_zset') }}" method="post" id="new_key_form">
 		{{ form.csrf }}
 		{{ render_field(form.key_name) }}
-		{{ render_field(form.key_value) }}
+		{{ render_field(form.member) }}
 		{{ render_field(form.score) }}
 		{{ render_field(form.key_ttl, type="number", class="optional") }}
 		<a href="{{ url_for('index') }}" id="cancel">cancel</a>

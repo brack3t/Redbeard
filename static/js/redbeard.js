@@ -128,6 +128,7 @@ $(function() {
                 },
                 'Sorted Set': {
                     'action': function() {
+                        window.location = '/key/new/zset';
                     }
                 }
             }

@@ -46,7 +46,7 @@ class HashForm(Form):
     member_name = TextField('Member', validators=[Required()])
     member_value = TextField('Value', validators=[Required()])
 
-class ZSetForm(StringForm):
+class ZSetForm(ListSetForm):
     """
     Form for creating a ZSet
     """
@@ -389,7 +389,7 @@ def new_zset():
     form = ZSetForm(request.form or None)
     if form.validate_on_submit():
         key = request.form['key_name']
-        value = request.form['key_value']
+        member = request.form['member']
         key_ttl = request.form['key_ttl']
         score = request.form['score']
 
@@ -403,11 +403,12 @@ def new_zset():
         if not r:
             return redirect(url_for('setup'))
 
-        r.zadd(key, value, score)
+        r.zadd(key, member, score)
 
         try:
             key_ttl = int(key_ttl)
-            r.expire(key, key_ttl)
+            if key_ttl > 0:
+                r.expire(key, key_ttl)
         except ValueError:
             pass
 
