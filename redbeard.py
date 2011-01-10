@@ -24,33 +24,32 @@ app.config.from_object(__name__)
 app.debug = True
 
 # Forms
-class StringForm(Form):
+class KeyForm(Form):
     key_name = TextField('Key', validators=[Required()])
-    key_value = TextField('Value', validators=[Required()])
     key_ttl = IntegerField('TTL')
 
-class ListSetForm(Form):
+class StringForm(KeyForm):
+    key_value = TextField('Value', validators=[Required()])
+
+class ListSetForm(KeyForm):
     """
     Form for creating a new set or list
     """
-    key_name = TextField('Key', validators=[Required()])
     member = TextField('Member', validators=[Required()])
-    key_ttl = IntegerField('TTL (in seconds)')
 
-class HashForm(Form):
+class HashForm(KeyForm):
     """
     Form for creating a hash.
     """
-    key_name = TextField('Key', validators=[Required()])
-    key_ttl = IntegerField('TTL (in seconds)')
     member_name = TextField('Member', validators=[Required()])
     member_value = TextField('Value', validators=[Required()])
 
-class ZSetForm(ListSetForm):
+class ZSetForm(KeyForm):
     """
     Form for creating a ZSet
     """
-    score = FloatField('Score', validators=[Required()])
+    member_name = TextField('Member', validators=[Required()])
+    member_score = FloatField('Score', validators=[Required()])
 
 # Context processors
 @app.context_processor
@@ -389,28 +388,18 @@ def new_zset():
     form = ZSetForm(request.form or None)
     if form.validate_on_submit():
         key = request.form['key_name']
-        member = request.form['member']
-        key_ttl = request.form['key_ttl']
-        score = request.form['score']
-
-        try:
-            score = float(score)
-        except ValueError:
-            flash('Score must be an int or float')
-            return render_template('new_zset.html', form=form)
+        ttl = int(request.form['key_ttl'])
 
         r = get_redis_connection(session)
         if not r:
             return redirect(url_for('setup'))
 
-        r.zadd(key, member, score)
+        for m in [k for k in request.form.keys() if k.startswith('member_name')]:
+            v = re.sub('name', 'score', m)
+            r.zadd(key, request.form[m], float(request.form[v]))
 
-        try:
-            key_ttl = int(key_ttl)
-            if key_ttl > 0:
-                r.expire(key, key_ttl)
-        except ValueError:
-            pass
+        if ttl and ttl != 0:
+            r.expire(key, ttl)
 
         flash('%s was created.' % key)
         return redirect('#%s' % key)

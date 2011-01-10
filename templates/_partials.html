@@ -33,10 +33,16 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td>{{ field1(**kwargs)|safe }}</td>
+				<td>{{ field1|safe }}</td>
 				<td>{{ field2(**kwargs)|safe }}</td>
 			</tr>
 		</tbody>
 	</table>
 </fieldset>
+{% endmacro %}
+
+{% macro key_list(key) %}
+<li>
+	<a href="{{ url_for('key', key=key) }}">{{ key }}</a>
+</li>
 {% endmacro %}

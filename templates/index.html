@@ -5,8 +5,9 @@
 	<h1>Keys</h1>
 </header>
 <ul id="keylist">
+	{% from "_partials.html" import key_list %}
 	{% for key in keys %}
-	<li><a href="{{ url_for('key', key=key) }}">{{ key }}</a></li>
+		{{ key_list(key) }}
 	{% endfor %}
 </ul>
 {% endblock %}
