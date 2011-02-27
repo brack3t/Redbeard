@@ -1,7 +1,3 @@
-jQuery.expr[':'].Contains = function(a, i, m) {
-    return (a.textContent || a.innerText || '').toUpperCase().indexOf(m[3].toUpperCase())>=0;
-}
-
 function listFilter(header, list) {
     var form = $('<form>').attr({'class': 'filterform', 'action': '#'}),
         input = $('<input>').attr({
