@@ -429,7 +429,7 @@ def search(string=None):
     if not r:
         return redirect(url_for('setup'))
     if string:
-        search_string = string + '*'
+        search_string = '*' + string + '*'
     else:
         search_string = '*'
 
