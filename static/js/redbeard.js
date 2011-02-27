@@ -41,7 +41,7 @@ function listFilter(header, list) {
                 .success(function(data) {
                     var items = [];
                     $.each(data['keys'], function(key, value) {
-                        items.push('<li><a href="/key/' + value + '/">' + value + '</a></li>');
+                        items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
                     });
                     $(list).html(items.join(''));
                 })
@@ -65,7 +65,7 @@ function update_keys() {
         .success(function(data) {
             var items = [];
             $.each(data['keys'], function(key, value) {
-                items.push('<li><a href="/key/' + value + '/">' + value + '</a></li>');
+                items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
             });
             $(list).html(items.join(''));
         })
