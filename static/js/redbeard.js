@@ -49,18 +49,7 @@ function listFilter(header, list) {
                     $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
                 });
         } else {
-            $(list).empty();
-            var jqxhr = $.getJSON('/search/' + filter)
-                .success(function(data) {
-                    var items = [];
-                    $.each(data['keys'], function(key, value) {
-                        items.push('<li><a href="/key/' + value + '/">' + value + '</a></li>');
-                    });
-                    $(list).html(items.join(''));
-                })
-                .error(function() {
-                    $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
-                });
+            update_keys();
         }
     }).keyup(function() {
         $(this).change();
@@ -69,15 +58,32 @@ function listFilter(header, list) {
     });
 }
 
+function update_keys() {
+    list = $("#keylist");
+    $(list).empty();
+    var jqxhr = $.getJSON('/search/')
+        .success(function(data) {
+            var items = [];
+            $.each(data['keys'], function(key, value) {
+                items.push('<li><a href="/key/' + value + '/">' + value + '</a></li>');
+            });
+            $(list).html(items.join(''));
+        })
+        .error(function() {
+            $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
+        });
+    $(window).hashchange();
+}
+
 $(window).hashchange(function() {
-    var hash = window.location.hash.replace('#', '');
+    var hash = location.hash.replace('#', '');
     if (hash != '') {
         var link = '/key/' + hash;
         $.get(link, function(data) {
             $('#right').html(data);
         });
         $('li', '#keylist').removeClass('current');
-        $('a[href=' + link + ']', '#keylist').parent('li').addClass('current');
+        $('a[href="' + link + '"]', '#keylist').parent('li').addClass('current');
         $('#keylist').scrollTo('.current');
     } else {
         $('#right').empty();
@@ -88,9 +94,9 @@ $(function() {
     listFilter($('#keyheader'), $('#keylist'));
     $(".filterform").live('submit', function(e) { e.preventDefault(); });
 
-    if (window.location.hash) {
-        var link = '/key/' + window.location.hash.replace('#', '');
-        $('a[href=' + link + ']', '#keylist').parent('li').addClass('current');
+    if (location.hash) {
+        var link = '/key/' + location.hash.replace('#', '');
+        $('a[href="' + link + '"]', '#keylist').parent('li').addClass('current');
 
         $.get(link, function(data) {
             $('#right').html(data);
@@ -109,6 +115,8 @@ $(function() {
             window.location.hash = hash;
         });
     });
+
+    $(window).hashchange();
 
     $('#id_redis_db').live('change', function() {
         $(this).parent().parent('form').submit();
@@ -159,6 +167,78 @@ $(function() {
                     'action': function() {
                         window.location = '/key/new/zset';
                     }
+                }
+            }
+        });
+    });
+    var flashes = $("#flashes");
+
+    $("#refresh").live('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var link = $(this).attr('href'),
+            hash = link.replace("/key/", "");
+        $.get(link, function(data) {
+            $('#right').html(data);
+            window.location.hash = hash;
+        });
+    });
+
+    $("#delete").live('click', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+        var link = $(this).attr("href");
+        $.confirm({
+            'title': 'Delete Confirmation',
+            'message': 'Are you sure you want to delete this key?',
+            'buttons': {
+                'Yes': {
+                    'class': 'go',
+                    'action': function() {
+                        $.ajax({
+                            url: link,
+                            dataType: "json",
+                            success: function(data) {
+                                flashes.empty();
+                                $("<li>").text(data['flash']).appendTo(flashes);
+                                $("#refresh_keys").trigger('click');
+                            }
+                        });
+                    }
+                },
+                'No': {
+                    'class': 'stop'
+                }
+            }
+        });
+    });
+
+    $("#key").live('submit', function(e) {
+        e.stopPropagation();
+        e.preventDefault();
+
+        var link = $(this).attr("action"),
+            flashes = $("#flashes"),
+            saved_name = $(this).find("input[name=saved_key_name]").val();
+
+        flashes.empty();
+
+        $.ajax({
+            url: link,
+            type: "POST",
+            data: {
+                "key_name": $(this).find("input[name=key_name]").val(),
+                "saved_key_name": saved_name,
+                "value": $(this).find("textarea").val()
+            },
+            dataType: "json",
+            success: function(data) {
+                $(this).find("textarea").val(data['value']);
+                $(this).find("input[name=key_name], input[name=saved_key_name]").val(data['key']);
+                $("<li>").text(data['flash']).appendTo(flashes);
+                if (data['key_changed'] = 'true') {
+                    location.hash = data['key'];
+                    update_keys();
                 }
             }
         });

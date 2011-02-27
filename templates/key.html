@@ -1,11 +1,13 @@
-<article id="key">
-	<header>
-		<h2>{{ rtype }}: <b>{{ key }}</b></h2>
-		{% if ttl %}
-		<h3>Key expires in: {{ ttl }} seconds</h3>
-		{% endif %}
-	</header>
+<article>
 	<form action="{{ url_for('save', key=key) }}" method="post" id="key">
+		<header>
+			<h2>{{ rtype }}</h2>
+			<input type="text" name="key_name" value="{{ key }}">
+			<input type="hidden" name="saved_key_name" value="{{ key }}">
+			{% if ttl %}
+			<h3>Key expires in: {{ ttl }} seconds</h3>
+			{% endif %}
+		</header>
 		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
 		<div id="controls">
 			<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
@@ -14,70 +16,3 @@
 		</div>
 	</form>
 </article>
-
-<script>
-	$(function() {
-		var flashes = $("#flashes");
-
-		$("#refresh").live('click', function(e) {
-        	var link = $(this).attr('href'),
-            	hash = link.replace("/key/", "");
-        	e.preventDefault();
-        	$.get(link, function(data) {
-            	$('#right').html(data);
-            	window.location.hash = hash;
-        	});
-		});
-
-		$("#delete").live('click', function(e) {
-			e.stopPropagation();
-			e.preventDefault();
-			var link = $(this).attr("href");
-			$.confirm({
-				'title': 'Delete Confirmation',
-				'message': 'Are you sure you want to delete this key?',
-				'buttons': {
-					'Yes': {
-						'class': 'go',
-						'action': function() {
-							$.ajax({
-								url: link,
-								dataType: "json",
-								success: function(data) {
-									flashes.empty();
-									$("<li>").text(data['flash']).appendTo(flashes);
-									$("#refresh_keys").trigger('click');
-								}
-							});
-						}
-					},
-					'No': {
-						'class': 'stop'
-					}
-				}
-			});
-		});
-
-    	$("#key").submit(function(e) {
-        	e.preventDefault();
-
-			var link = $(this).attr("action"),
-				flashes = $("#flashes");
-
-			flashes.empty();
-
-			$.ajax({
-				url: link,
-				type: "POST",
-				data: {
-					"value": $(this).find("textarea").val()
-				},
-				dataType: "json",
-				success: function(data) {
-					$(this).find("textarea").val(data['value']);
-					$("<li>").text(data['flash']).appendTo(flashes);
-				}
-			});
-    	});
-	});
-</script>

@@ -270,9 +270,17 @@ def save(key):
     elif rtype == 'string':
         r.set(key, value)
 
+    key_changed = 'false'
+    if request.form['key_name'] != request.form['saved_key_name']:
+        r.rename(key, request.form['key_name'])
+        key = request.form['key_name']
+        key_changed = 'true'
+
     return jsonify(
         flash=key + ' was saved successfully',
-        value=value
+        value=value,
+        key=key,
+        key_changed=key_changed
     )
 
 @app.route('/key/new/string', methods=['GET', 'POST'])
