@@ -27,15 +27,48 @@ function listFilter(header, list) {
     $(controls).append(add_key).append(refresh);
     $(form).append(input).append(controls).appendTo(header);
 
+    $(input).ajaxStart(function() {
+        $(list).css({background: 'url("/static/img/ajax-loader.gif") center center no-repeat'});
+    })
+    .ajaxStop(function() {
+        $(list).css({background: 'none'});
+    })
+    .ajaxSuccess(function() {
+        $(list).css({background: 'none'});
+    });
+
     $(input).change(function() {
         var filter = $(this).val();
         if (filter) {
-            $(list).find('a:not(:Contains(' + filter + '))').parent().slideUp();
-            $(list).find('a:Contains(' + filter + ')').parent().slideDown();
+            $(list).empty();
+            var jqxhr = $.getJSON('/search/' + filter)
+                .success(function(data) {
+                    var items = [];
+                    $.each(data['keys'], function(key, value) {
+                        items.push('<li><a href="/key/' + value + '/">' + value + '</a></li>');
+                    });
+                    $(list).html(items.join(''));
+                })
+                .error(function() {
+                    $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
+                });
         } else {
-            $(list).find('li').slideDown();
+            $(list).empty();
+            var jqxhr = $.getJSON('/search/' + filter)
+                .success(function(data) {
+                    var items = [];
+                    $.each(data['keys'], function(key, value) {
+                        items.push('<li><a href="/key/' + value + '/">' + value + '</a></li>');
+                    });
+                    $(list).html(items.join(''));
+                })
+                .error(function() {
+                    $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
+                });
         }
     }).keyup(function() {
+        $(this).change();
+    }).blur(function() {
         $(this).change();
     });
 }

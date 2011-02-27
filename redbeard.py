@@ -420,5 +420,20 @@ def delete(key):
     else:
         return jsonify(flash="Key '" + key + "' was not found in Redis")
 
+@app.route('/search/<string>', methods=['GET'])
+@app.route('/search/', methods=['GET'])
+def search(string=None):
+    """ Find keys matching a string. """
+    r = get_redis_connection(session)
+
+    if not r:
+        return redirect(url_for('setup'))
+    if string:
+        search_string = string + '*'
+    else:
+        search_string = '*'
+
+    return jsonify(keys=r.keys(pattern=search_string))
+
 if __name__ == '__main__':
     app.run()
