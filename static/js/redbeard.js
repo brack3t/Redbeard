@@ -22,6 +22,31 @@ function update_keys(filter) {
     $(window).hashchange();
 }
 
+function load_keys(all) {
+    var keys_url = '/keys';
+
+    if (all) {
+        keys_url += '/all';
+    }
+
+    var jqxhr = $.getJSON(keys_url)
+        .success(function(data) {
+            var items = [];
+            $.each(data['initial_keys'], function(key, value) {
+                items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
+            });
+            $("#keylist").empty().html(items.join(''));
+            if (data['initial_keys'].length != data['total_keys']) {
+                $("#keylist")
+                    .append('<li class="paginator">' + data['initial_keys'].length + ' of ' + data['total_keys'] + '. Click to load the rest.</li>')
+                    .click(function() { load_keys(all=true); });
+            }
+        })
+        .error(function() {
+            $("#keylist").empty().html('<li>An error occurred. Make sure redis running and reload the page.</li>');
+        });
+}
+
 function listFilter(header, list) {
     var form = $('<form>').attr({'class': 'filterform', 'action': '#'}),
         input = $('<input>').attr({
@@ -112,6 +137,7 @@ $(function() {
         });
     });
 
+    load_keys();
     $(window).hashchange();
 
     $('#id_redis_db').live('change', function() {
@@ -124,7 +150,7 @@ $(function() {
         $.get(link, function(data) {
             $('#keylist').empty();
             keys = []
-            for (i in data['keys']) {
+            for (i in data['initial_keys']) {
                 keys.push('<li><a href="/key/' + data['keys'][i] + '">' + data['keys'][i] + '</a></li>');
             }
             $('#keylist').append(keys.join(''));

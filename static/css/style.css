@@ -205,6 +205,11 @@ a:hover { text-decoration:underline; }
         text-decoration:none;
         word-break:break-all;
       }
+    #keylist li.paginator {
+      cursor:pointer;
+      font-style:italic;
+      text-align:center;
+    }
 
 #cancel {
   background:url('../img/cancel.png') center center no-repeat;

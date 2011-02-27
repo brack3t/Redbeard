@@ -156,13 +156,11 @@ def index():
     if not r:
         return redirect(url_for('setup'))
 
-    keys = r.keys()
-    if len(keys) > 500:
-        keys = keys[:500]
-    return render_template('index.html', keys=keys)
+    return render_template('index.html')
 
 @app.route('/keys')
-def keys():
+@app.route('/keys/<amount>')
+def keys(amount=None):
     """ Get available keys. """
     if not session.has_key('redis_db'):
         set_session_defaults(session)
@@ -171,8 +169,12 @@ def keys():
     if not r:
         return redirect(url_for('setup'))
 
-    keys = r.keys()
-    return jsonify(keys=keys)
+    total_keys = len(r.keys())
+    if not amount:
+        initial_keys = r.keys()[:500]
+    else:
+        initial_keys = r.keys()
+    return jsonify(total_keys=total_keys, initial_keys=initial_keys)
 
 @app.route('/key/<key>')
 def key(key):
