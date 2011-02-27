@@ -202,29 +202,6 @@ def key(key):
         return render_template('no_key.html', key=key)
 
 # Read/write views
-@app.route('/new', methods=['GET', 'POST'])
-def new_key():
-    form = StringForm(request.form or None)
-    if form.validate_on_submit():
-        key = request.form['key_name']
-        value = request.form['key_value']
-
-        r = get_redis_connection(session)
-        if not r:
-            return redirect(url_for('setup'))
-
-        if r.exists(key):
-            return jsonify(flash=key + ' already exists.')
-
-        try:
-            r.set(key, value)
-            flash('%s was saved successfully.' % key)
-            return redirect('#%s' % key)
-        except:
-            return jsonify(flash=key + ' was not saved successfully.')
-
-    return render_template('new_key.html', form=form)
-
 @app.route('/key/save/<key>', methods=['POST'])
 def save(key):
     """ Update the value of a key. """
