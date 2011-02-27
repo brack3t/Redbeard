@@ -206,10 +206,12 @@ a:hover { text-decoration:underline; }
         word-break:break-all;
       }
     #keylist li.paginator {
-      cursor:pointer;
       font-style:italic;
       text-align:center;
     }
+      #keylist li.paginator a {
+        display:inline;
+      }
 
 #cancel {
   background:url('../img/cancel.png') center center no-repeat;

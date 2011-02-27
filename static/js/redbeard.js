@@ -22,24 +22,32 @@ function update_keys(filter) {
     $(window).hashchange();
 }
 
-function load_keys(all) {
+function load_keys(amount) {
     var keys_url = '/keys';
 
-    if (all) {
-        keys_url += '/all';
+    if (amount) {
+        keys_url += '/' + amount;
     }
 
     var jqxhr = $.getJSON(keys_url)
         .success(function(data) {
-            var items = [];
+            var items = [],
+                count = data['initial_keys'].length,
+                total = data['total_keys'];
+
             $.each(data['initial_keys'], function(key, value) {
                 items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
             });
+
             $("#keylist").empty().html(items.join(''));
-            if (data['initial_keys'].length != data['total_keys']) {
+
+            if (count != total) {
                 $("#keylist")
-                    .append('<li class="paginator">' + data['initial_keys'].length + ' of ' + data['total_keys'] + '. Click to load the rest.</li>')
-                    .click(function() { load_keys(all=true); });
+                    .append('<li class="paginator">Loaded ' + count + ' of ' + total + '. <a href="' + (count + 500) + '">Load 500 more</a> | <a href="' + total + '">Load all keys</a></li>');
+                $("#keylist .paginator a").live('click', function(e) {
+                    e.preventDefault();
+                    load_keys($(this).attr('href'));
+                });
             }
         })
         .error(function() {
