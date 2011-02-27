@@ -157,6 +157,8 @@ def index():
         return redirect(url_for('setup'))
 
     keys = r.keys()
+    if len(keys) > 500:
+        keys = keys[:500]
     return render_template('index.html', keys=keys)
 
 @app.route('/keys')
