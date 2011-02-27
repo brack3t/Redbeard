@@ -1,3 +1,27 @@
+function update_keys(filter) {
+    var list = $("#keylist"),
+        search_location = '/search/';
+
+    if (filter) {
+        search_location += filter;
+    }
+
+    $(list).empty();
+
+    var jqxhr = $.getJSON(search_location)
+        .success(function(data) {
+            var items = [];
+            $.each(data['keys'], function(key, value) {
+                items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
+            });
+            $(list).html(items.join(''));
+        })
+        .error(function() {
+            $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
+        });
+    $(window).hashchange();
+}
+
 function listFilter(header, list) {
     var form = $('<form>').attr({'class': 'filterform', 'action': '#'}),
         input = $('<input>').attr({
@@ -36,18 +60,7 @@ function listFilter(header, list) {
     $(input).change(function() {
         var filter = $(this).val();
         if (filter) {
-            $(list).empty();
-            var jqxhr = $.getJSON('/search/' + filter)
-                .success(function(data) {
-                    var items = [];
-                    $.each(data['keys'], function(key, value) {
-                        items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
-                    });
-                    $(list).html(items.join(''));
-                })
-                .error(function() {
-                    $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
-                });
+            update_keys(filter);
         } else {
             update_keys();
         }
@@ -56,23 +69,6 @@ function listFilter(header, list) {
     }).blur(function() {
         $(this).change();
     });
-}
-
-function update_keys() {
-    list = $("#keylist");
-    $(list).empty();
-    var jqxhr = $.getJSON('/search/')
-        .success(function(data) {
-            var items = [];
-            $.each(data['keys'], function(key, value) {
-                items.push('<li><a href="/key/' + value + '">' + value + '</a></li>');
-            });
-            $(list).html(items.join(''));
-        })
-        .error(function() {
-            $(list).html('<li>An error occurred. Make sure redis is running and reload the page.</li>');
-        });
-    $(window).hashchange();
 }
 
 $(window).hashchange(function() {
