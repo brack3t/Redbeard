@@ -1,0 +1,48 @@
+{% macro render_field(field) %}
+<fieldset>
+	{% if field.errors %}
+	<ul class="errors">
+		{% for error in field.errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	{{ field.label }}
+	{{ field(**kwargs)|safe }}
+</fieldset>
+{% endmacro %}
+
+{% macro render_keyvalue(field1, field2) %}
+<fieldset>
+	{% if field1.errors or field2.errors %}
+	<ul class="errors">
+		{% for error in field1.errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+		{% for error in field2.errors %}
+		<li>{{ error }}</li>
+		{% endfor %}
+	</ul>
+	{% endif %}
+	<table>
+		<thead>
+			<tr>
+				<th>{{ field1.label }}</th>
+				<th>{{ field2.label }}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td>{{ field1|safe }}</td>
+				<td>{{ field2(**kwargs)|safe }}</td>
+			</tr>
+		</tbody>
+	</table>
+</fieldset>
+{% endmacro %}
+
+{% macro key_list(key) %}
+<li>
+	<a href="{{ url_for('key', key=key) }}">{{ key }}</a>
+</li>
+{% endmacro %}

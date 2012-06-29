@@ -1,0 +1,18 @@
+<article>
+	<form action="{{ url_for('save', key=key) }}" method="post" id="key">
+		<header>
+			<h2>{{ rtype }}</h2>
+			<input type="text" name="key_name" value="{{ key }}">
+			<input type="hidden" name="saved_key_name" value="{{ key }}">
+			{% if ttl %}
+			<h3>Key expires in: {{ ttl }} seconds</h3>
+			{% endif %}
+		</header>
+		<textarea name="value" cols="60" rows="20">{{ output }}</textarea>
+		<div id="controls">
+			<a id="refresh" href="{{ url_for('key', key=key) }}" title="refresh">refresh</a>
+			<a id="delete" href="{{ url_for('delete', key=key) }}" title="delete">delete</a>
+			<input type="submit" value="save" title="save">
+		</div>
+	</form>
+</article>

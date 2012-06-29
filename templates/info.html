@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8">
+
+	<title>Redbeard</title>
+	
+</head>
+<body>
+	<h1>Red fuckin' beard</h1>
+	<h2>Redis Info</h2>
+	<ul>
+		{% for i in info %}
+		<li>{{ i.0 }}: {{ i.1 }}</li>
+		{% endfor %}
+	</ul>
+</body>
+</html>

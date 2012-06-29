@@ -1,0 +1,26 @@
+========
+REDBEARD
+========
+
+Current version 0.8
+12/12/2010
+
+Created by Brack3t
+Authors: Kenneth Love (kenneth@brack3t.com) and Chris Jones (chris@brack3t.com).
+
+INSTALLATION
+============
+Clone the repository. Create a virtual environment and do:
+    `pip install -r requirements.txt`.
+
+Then launch Redbeard with:
+    `python redbeard.py`
+and load "http://127.0.0.1:5000" in your browser of choice.
+
+USAGE
+=====
+Redbeard allows you to view and edit (some) redis keys. Select the database
+from the dropdown, click on the key in the list on the left side and edit the
+values on the right.  Currently only *hashes* and *strings* can be edited but 
+the other datatypes will follow soon.  Click the save icon to save the key or
+the refresh button to load the new value if it may have changed elsewhere.

@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block leftblock %}
+<header id="keyheader">
+	<h1>Keys</h1>
+</header>
+<ul id="keylist">
+	{% from "_partials.html" import key_list %}
+	{% for key in keys %}
+		{{ key_list(key) }}
+	{% endfor %}
+</ul>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extra_scripts %}
+	<script src="{{ url_for('static', filename='js/libs/jquery.hashchange.min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/libs/jquery.scrollTo-1.4.2-min.js') }}"></script>
+	<script src="{{ url_for('static', filename='js/redbeard.js') }}"></script>
+{% endblock %}

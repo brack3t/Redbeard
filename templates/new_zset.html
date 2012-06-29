@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% block leftblock %}
+<article>
+	<header>
+		<h1>Add New Sorted Set</h1>
+	</header>
+	{% from "_partials.html" import render_field, render_keyvalue %}
+	<form action="{{ url_for('new_zset') }}" method="post" id="new_key_form">
+		{{ form.csrf }}
+		{{ render_field(form.key_name) }}
+		<fieldset id="members">
+			<a class="add_member_table">+</a>
+			{{ render_keyvalue(form.member_name, form.member_score, type="number") }}
+		</fieldset>
+		{{ render_field(form.key_ttl, type="number", class="optional") }}
+		<a href="{{ url_for('index') }}" id="cancel">cancel</a>
+		<input type="submit" value="Submit">
+	</form>
+
+</article>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', filename='js/newkeys.js') }}"></script>
+{% endblock %}

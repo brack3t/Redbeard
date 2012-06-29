@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block leftblock %}
+<article>
+	<header>
+		<h1>Add New String</h1>
+	</header>
+	{% from "_partials.html" import render_field %}
+	<form action="{{ url_for('new_string') }}" method="post" id="new_key_form">
+		{{ form.csrf }}
+		{{ render_field(form.key_name) }}
+		{{ render_field(form.key_value) }}
+		{{ render_field(form.key_ttl, type="number", class="optional") }}
+		<a href="{{ url_for('index') }}" id="cancel">cancel</a>
+		<input type="submit" value="Submit">
+	</form>
+
+</article>
+{% endblock %}

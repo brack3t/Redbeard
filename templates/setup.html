@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block leftblock %}
+<header>
+	<h1>Setup</h1>
+</header>
+<p>There was an error connecting to Redis. Either Redis is not running or you 
+are using a custom host/port. Use the form below to setup your Redis
+connection.</p>
+
+<form action="" method="post" id="setup_form">
+	<fieldset>
+		<label for="host">Host:</label>
+		<input type="text" name="host" placeholder="{{ session.redis_host }}">
+	</fieldset>
+	<fieldset>
+		<label for="port">Port:</label>
+		<input type="text" name="port" placeholder="{{ session.redis_port }}">
+	</fieldset>
+	<fieldset>
+		<label for="port">Password:</label>
+		<input type="password" name="password">
+	</fieldset>
+	<input type="submit" value="Submit">
+</form>
+{% endblock %}
+
+{% block content %}
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}
