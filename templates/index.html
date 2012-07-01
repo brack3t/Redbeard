@@ -3,8 +3,12 @@
 {% block left %}
 <div class="well">
 <script type="text/x-handlebars">{% raw %}
-    {{view Redbeard.SearchTextField placeholder="Find a key" valueBinding="Redbeard.keysController.key_name"}}
-    <button {{action "loadKeys" target="Redbeard.keysController"}}>Go!</button>
+    <form class="form-search">
+        <div class="input-append">
+            {{view Redbeard.SearchTextField placeholder="Find a key" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
+            <button type="button" {{action "loadKeys" target="Redbeard.keysController"}} class="btn">Go!</button>
+        </div>
+    </form>
 
     <ul class="nav nav-list" id="keys-list">
         <li class="nav-header">Keys</li>

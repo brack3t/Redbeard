@@ -15,13 +15,23 @@ Redbeard.SearchTextField = Ember.TextField.extend({
 Redbeard.keysController = Ember.ArrayController.create({
     content: [],
     key_name: '',
+    query: '',
+
+    filter: function() {
+        var self = this,
+            query = self.get("query");
+
+        self.set("key_name", query);
+
+        self.loadKeys(query);
+    }.observes("query"),
 
     loadKeys: function() {
         var self = this,
             key_name = self.get("key_name"),
             url;
 
-        if (key_name) {
+        if (key_name.length > 0) {
             url = "/keys/%@".fmt(self.get("key_name"));
         } else {
             url = "/keys";

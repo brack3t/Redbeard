@@ -52,28 +52,30 @@ class KeyAPI(MethodView):
         else:
             return None
 
-    def _get_keys(self):
+    def _get_keys(self, partial=None):
+        partial = partial or ''
         r = get_redis_connection(session)
-        r_keys = r.keys("*")
+        r_keys = r.keys("%s*" % partial)
         return [self._get_key(k) for k in r_keys]
 
-    def get(self, key_id):
-        key = None
-        if key_id:
-            key = self._get_key(key_id)
-            return render_template(self.template_name, key=key)
+    def get(self, partial=None):
+        partial = partial or ''
+
+        keys = self._get_keys(partial)
+
+        if len(keys) == 1:
+            return render_template(self.template_name, key=keys[0])
         else:
-            keys = self._get_keys()
             return render_template("list.html", keys=keys)
 
     def post(self, key_id):
             return render_template(self.template_name)
 
 key_view = KeyAPI.as_view("key_view")
-app.add_url_rule("/keys", defaults={"key_id": None}, view_func=key_view,
+app.add_url_rule("/keys", defaults={"partial": None}, view_func=key_view,
     methods=["GET"])
 app.add_url_rule("/keys", view_func=key_view, methods=["POST"])
-app.add_url_rule("/keys/<string:key_id>", view_func=key_view,
+app.add_url_rule("/keys/<string:partial>", view_func=key_view,
     methods=["GET", "PUT", "DELETE"])
 
 
