@@ -1,22 +1,20 @@
 {% extends "layout.html" %}
 
-{% block leftblock %}
-<header id="keyheader">
-	<h1>Keys</h1>
-</header>
-<ul id="keylist">
-	{% from "_partials.html" import key_list %}
-	{% for key in keys %}
-		{{ key_list(key) }}
-	{% endfor %}
-</ul>
-{% endblock %}
+{% block left %}
+<div class="well">
+<script type="text/x-handlebars">{% raw %}
+    {{view Redbeard.SearchTextField placeholder="Key name" valueBinding="Redbeard.keysController.key_name"}}
+    <button {{action "loadKeys" target="Redbeard.keysController"}}>Go!</button>
 
-{% block content %}
+    <ul class="nav nav-list" id="keys-list">
+        <li class="nav-header">Keys</li>
+        {{#each Redbeard.keysController}}
+        <li>{{this.0.id}}</li>
+        {{/each}}
+    </ul>
+{% endraw %}</script>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
-	<script src="{{ url_for('static', filename='js/libs/jquery.hashchange.min.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/libs/jquery.scrollTo-1.4.2-min.js') }}"></script>
-	<script src="{{ url_for('static', filename='js/redbeard.js') }}"></script>
 {% endblock %}

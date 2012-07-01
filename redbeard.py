@@ -1,15 +1,14 @@
 """
 TODO
 """
-__author__ = "Chris Jones, Kenneth Love"
-__version__ = "0.8.5"
-__license__ = "MIT"
+__author__ = 'Chris Jones, Kenneth Love'
+__version__ = '0.8.5'
+__license__ = 'MIT'
 
 import re
 
-from flask import (Flask, render_template, redirect, url_for, request, flash,
-    session, jsonify)
-from flask.views import MethodView
+from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import session, jsonify
 
 from flaskext.wtf import Form, TextField, Required, IntegerField, FloatField
 
@@ -18,7 +17,7 @@ from redis.exceptions import ConnectionError, ResponseError
 
 import settings
 
-SECRET_KEY = "781b0650af13493089a6ffafac755a61"
+SECRET_KEY = '781b0650af13493089a6ffafac755a61'
 
 app = Flask(__name__)
 app.config.from_object(__name__)
@@ -60,55 +59,6 @@ def get_db_size():
         return {'db_size':0}
 
     return dict(db_size=r.dbsize())
-
-class Key(object):
-    def __init__(self, *args, **kwargs):
-        self.type = kwargs.get("type")
-        self.id = kwargs.get("id")
-        self.value = kwargs.get("value")
-
-
-class KeyAPI(MethodView):
-    template_name = "detail.html"
-
-    def _get_key(self, key_id):
-        r = get_redis_connection(session)
-        key_type = r.type(key_id)
-
-        if key_type == "string":
-            value = r.get(key_id)
-            return Key(type="string", id=key_id, value=value)
-        elif key_type == "hash":
-            value = r.hgetall(key_id)
-            return Key(type="hash", id=key_id, value=value)
-        elif key_type == "list":
-            value = r.lrange(key_id, 0, r.llen(key_id))
-            return Key(type="list", id=key_id, value=value)
-        elif key_type == "set":
-            value = r.smembers(key_id)
-            return Key(type="set", id=key_id, value=value)
-        elif key_type == "zset":
-            value = r.zrange(key_id, 0, r.zcard(key_id), "WITHSCORES")
-            return Key(type="zset", id=key_id, value=value)
-        else:
-            return None
-
-    def get(self, key_id):
-        key = None
-        if key_id:
-            key = self._get_key(key_id)
-        return render_template(self.template_name, key=key)
-
-    def post(self, key_id):
-        return render_template(self.template_name)
-
-key_view = KeyAPI.as_view("key_view")
-app.add_url_rule("/keys/", defaults={"key_id": None}, view_func=key_view,
-    methods=["GET",])
-app.add_url_rule("/keys/", view_func=key_view, methods=["POST",])
-app.add_url_rule("/keys/<string:key_id>", view_func=key_view,
-    methods=["GET", "PUT", "DELETE"])
-
 
 # Control app flow
 def get_redis_connection(session):
@@ -472,4 +422,6 @@ def search(string=None):
     return jsonify(keys=r.keys(pattern=search_string))
 
 if __name__ == '__main__':
-    app.run()
+    SERVER_NAME = "localhost"
+    SERVER_PORT = 8000
+    app.run(SERVER_NAME, SERVER_PORT)
