@@ -9,7 +9,11 @@
     <ul class="nav nav-list" id="keys-list">
         <li class="nav-header">Keys</li>
         {{#each Redbeard.keysController}}
-        <li>{{this.0.id}}</li>
+            {{#view Redbeard.keyView contentBinding="this"}}
+                {{#with content}}
+                <li>{{id}}</li>
+                {{/with}}
+            {{/view}}
         {{/each}}
     </ul>
 {% endraw %}</script>

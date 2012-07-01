@@ -29,28 +29,13 @@ Redbeard.keysController = Ember.ArrayController.create({
         $.getJSON(url, function(data) {
             self.set("content", []);
 
-            $(data).each(function(index, value) {
-                self.pushObject(Redbeard.Key.create(value));
+            data.forEach(function(key) {
+                self.pushObject(Redbeard.Key.create(key));
             });
         });
     }
 });
 
-Redbeard.keysView = Ember.CollectionView.extend({
-    content: [],
-
-    init: function() {
-        var self = this;
-        $.getJSON("/keys", function(data) {
-            keys = [];
-            data.forEach(function(key) {
-                keys.push(Redbeard.Key.create(key));
-            });
-            self.set("content", keys);
-        });
-    },
-
-    itemViewClass: Ember.View.extend({
-        template: Ember.Handlebars.compile("<li>{{content.id}}</li>")
-    })
+Redbeard.keyView = Ember.View.extend({
+    template: Ember.Handlebars.compile("<li>balls</li>")
 });

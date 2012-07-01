@@ -1,5 +1,9 @@
 [
 {% for key in keys %}
-    {% include "detail.html" %}{% if not loop.last %},{% endif %}
+    {
+        "type": "{{ key.type }}",
+        "id": "{{ key.id }}",
+        "value": "{{ key.value }}"
+    }{% if not loop.last %},{% endif %}
 {% endfor %}
 ]

@@ -67,7 +67,7 @@ class KeyAPI(MethodView):
             return render_template("list.html", keys=keys)
 
     def post(self, key_id):
-        return render_template(self.template_name)
+            return render_template(self.template_name)
 
 key_view = KeyAPI.as_view("key_view")
 app.add_url_rule("/keys", defaults={"key_id": None}, view_func=key_view,
