@@ -3,23 +3,26 @@
 {% block left %}
 <div class="well">
 <script type="text/x-handlebars">{% raw %}
-    <form class="form-search">
+    <form class="form-vertical">
         <div class="input-append">
-            {{view Redbeard.SearchTextField placeholder="Find a key" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
+            {{view Redbeard.SearchTextField placeholder="Filter by name" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
             <button type="button" {{action "loadKeys" target="Redbeard.keysController"}} class="btn">Go!</button>
         </div>
+        {{view Redbeard.FilterSelectField prompt="Filter by type" classNames="typeFilter" selectionBinding="Redbeard.keysController.type_filter"}}
     </form>
 
-    <ul class="nav nav-list" id="keys-list">
-        <li class="nav-header">Keys</li>
-        {{#each Redbeard.keysController}}
-            {{#view Redbeard.keyView contentBinding="this"}}
-                {{#with content}}
-                <li><a href="#" {{action "addKey" target="Redbeard.keyDetailController"}}>{{id}}</a></li>
-                {{/with}}
-            {{/view}}
-        {{/each}}
-    </ul>
+    <div id="keyslist">
+        <ul class="nav nav-list list">
+            <li class="nav-header">Keys</li>
+            {{#each Redbeard.keysController}}
+                {{#view Redbeard.keyView contentBinding="this"}}
+                    {{#with content}}
+                    <li {{bindAttr class="type"}}><a href="#" {{action "addKey" target="Redbeard.keyDetailController"}}>{{id}}</a></li>
+                    {{/with}}
+                {{/view}}
+            {{/each}}
+        </ul>
+    </div>
 {% endraw %}</script>
 </div>
 {% endblock %}
