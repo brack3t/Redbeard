@@ -37,5 +37,9 @@ Redbeard.keysController = Ember.ArrayController.create({
 });
 
 Redbeard.keyView = Ember.View.extend({
-    template: Ember.Handlebars.compile("<li>balls</li>")
+    template: Ember.Handlebars.compile("<li>balls</li>"),
+
+    click: function() {
+        alert("here");
+    }
 });
