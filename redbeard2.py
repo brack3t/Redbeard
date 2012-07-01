@@ -97,10 +97,12 @@ def get_redis_connection(session):
     return r
 
 def set_session_defaults(session):
-    """ Setup default session """
-    session["redis_db"] = settings.REDIS_DB
-    session["redis_host"] = settings.REDIS_HOST
-    session["redis_port"] = settings.REDIS_PORT
+    """
+    Setup default session
+    """
+    session["redis_db"] = getattr(settings, "REDIS_DB", 0)
+    session["redis_host"] = getattr(settings, "REDIS_HOST", "127.0.0.1")
+    session["redis_port"] = getattr(settings, "REDIS_PORT", 6379)
 
 def index():
     if "redis_db" not in session:
