@@ -3,7 +3,7 @@
 {% block left %}
 <div class="well">
 <script type="text/x-handlebars">{% raw %}
-    {{view Redbeard.SearchTextField placeholder="Key name" valueBinding="Redbeard.keysController.key_name"}}
+    {{view Redbeard.SearchTextField placeholder="Find a key" valueBinding="Redbeard.keysController.key_name"}}
     <button {{action "loadKeys" target="Redbeard.keysController"}}>Go!</button>
 
     <ul class="nav nav-list" id="keys-list">
@@ -11,13 +11,39 @@
         {{#each Redbeard.keysController}}
             {{#view Redbeard.keyView contentBinding="this"}}
                 {{#with content}}
-                <li>{{id}}</li>
+                <li><a href="#" {{action "addKey" target="Redbeard.keyDetailController"}}>{{id}}</a></li>
                 {{/with}}
             {{/view}}
         {{/each}}
     </ul>
 {% endraw %}</script>
 </div>
+{% endblock %}
+
+{% block right %}
+<script type="text/x-handlebars">{% raw %}
+{{#each Redbeard.keyDetailController}}
+    {{#view Redbeard.keyDetailView contentBinding="this"}}
+        {{#with content}}
+        <div class="page-header">
+            <h1>{{id}}</h1>
+        </div>
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Type</th>
+                    <td>{{type}}</td>
+                </tr>
+                <tr>
+                    <th>Value</th>
+                    <td>{{{value}}}</td>
+                </tr>
+            </tbody>
+        </table>
+        {{/with}}
+    {{/view}}
+{{/each}}
+{% endraw %}</script>
 {% endblock %}
 
 {% block extra_scripts %}

@@ -36,10 +36,35 @@ Redbeard.keysController = Ember.ArrayController.create({
     }
 });
 
-Redbeard.keyView = Ember.View.extend({
-    template: Ember.Handlebars.compile("<li>balls</li>"),
+Redbeard.keyDetailController = Ember.ArrayController.create({
+    content: [],
+    key_name: '',
 
-    click: function() {
-        alert("here");
+    addKey: function(key) {
+        var self = this,
+            key_name = key.context.get("id");
+        self.set("content", []);
+
+        url = "/keys/%@".fmt(key_name);
+        $.getJSON(url, function(data) {
+            data.forEach(function(key) {
+                self.pushObject(Redbeard.Key.create(key));
+            });
+        });
+    },
+    removeKey: function(view) {
+        this.removeObject(view.context);
     }
 });
+
+Redbeard.keyDetailView = Ember.View.extend({
+
+});
+
+Redbeard.keyView = Ember.View.extend({
+    click: function() {
+        
+    }
+});
+
+Redbeard.keysController.loadKeys();
