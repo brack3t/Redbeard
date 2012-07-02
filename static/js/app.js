@@ -102,14 +102,8 @@ Redbeard.keyDetailController = Ember.ArrayController.create({
     }
 });
 
-Redbeard.keyDetailView = Ember.View.extend({
+Redbeard.keyDetailView = Ember.View.extend({});
 
-});
-
-Redbeard.keyView = Ember.View.extend({
-    click: function() {
-        
-    }
-});
+Redbeard.keyView = Ember.View.extend({});
 
 Redbeard.keysController.loadKeys();
