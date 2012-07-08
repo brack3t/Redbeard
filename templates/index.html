@@ -1,57 +1,91 @@
-{% extends "layout.html" %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Redbeard</title>
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.css') }}" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}" media="screen" charset="utf-8">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span3">
+                <h1 id="logo">Redbeard</h1>
 
-{% block left %}
-<div class="well">
-<script type="text/x-handlebars">{% raw %}
-    <form class="form-vertical">
-        <div class="input-append">
-            {{view Redbeard.SearchTextField placeholder="Filter by name" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
-            <button type="button" {{action "loadKeys" target="Redbeard.keysController"}} class="btn">Go!</button>
+                <div class="well">
+                    <script type="text/x-handlebars">{% raw %}
+                        <form class="form-vertical">
+                            <div class="input-append">
+                                {{view Redbeard.SearchTextField placeholder="Filter by name" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
+                                <button type="button" {{action "loadKeys" target="Redbeard.keysController"}} class="btn">Go!</button>
+                            </div>
+                            {{view Redbeard.FilterSelectField prompt="Filter by type" classNames="typeFilter" selectionBinding="Redbeard.keysController.type_filter"}}
+                        </form>
+
+                        <div id="keyslist">
+                            <ul class="nav nav-list list">
+                                <li class="nav-header">Keys</li>
+                                {{#each Redbeard.keysController}}
+                                    {{#view Redbeard.keyView contentBinding="this"}}
+                                        {{#with content}}
+                                        <li {{bindAttr class="type"}}><a {{action "addKey" href=true target="Redbeard.keyDetailController"}}>{{id}}</a></li>
+                                        {{/with}}
+                                    {{/view}}
+                                {{/each}}
+                            </ul>
+                        </div>
+                    {% endraw %}</script>
+                </div>
+            </div>
+            <div class="span9">
+                <script type="text/x-handlebars" data-template-name="key-detail">{% raw %}
+                    {{#each Redbeard.keyDetailController}}
+                        {{#view Redbeard.keyDetailView contentBinding="this"}}
+                            {{#with content}}
+                            <div class="page-header">
+                                <h1>{{id}}</h1>
+                            </div>
+                            <table class="table table-bordered key-table">
+                                <tbody>
+                                    <tr>
+                                        <th>Type</th>
+                                        <td>{{type}}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Value</th>
+                                        <td>{{{value}}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a {{action "editKey" target="Redbeard.keyDetailController"}} class="btn btn-primary"><i class="icon-pencil icon-white"></i> Edit</a>
+                            {{/with}}
+                        {{/view}}
+                    {{/each}}
+                    {{#view Redbeard.keyEditView contentBinding="this"}}{{/view}}
+                {% endraw %}</script>
+
+                <script type="text/x-handlebars" data-template-name="key-edit">{% raw %}
+                    {{#each Redbeard.keyDetailController}}
+                        {{#view Redbeard.keyEditView contentBinding="this"}}
+                            {{#with content}}
+                            <div class="page-header">
+                                <h1>{{id}}</h1>
+                            </div>
+                            {{/with}}
+                        {{/view}}
+                    {{/each}}
+                {% endraw %}</script>
+            </div>
         </div>
-        {{view Redbeard.FilterSelectField prompt="Filter by type" classNames="typeFilter" selectionBinding="Redbeard.keysController.type_filter"}}
-    </form>
-
-    <div id="keyslist">
-        <ul class="nav nav-list list">
-            <li class="nav-header">Keys</li>
-            {{#each Redbeard.keysController}}
-                {{#view Redbeard.keyView contentBinding="this"}}
-                    {{#with content}}
-                    <li {{bindAttr class="type"}}><a href="#" {{action "addKey" target="Redbeard.keyDetailController"}}>{{id}}</a></li>
-                    {{/with}}
-                {{/view}}
-            {{/each}}
-        </ul>
+        <div class="row-fluid">
+            <p>&copy; <a href="http://brack3t.com">Brack3t</a>.</p>
+        </div>
     </div>
-{% endraw %}</script>
-</div>
-{% endblock %}
-
-{% block right %}
-<script type="text/x-handlebars">{% raw %}
-{{#each Redbeard.keyDetailController}}
-    {{#view Redbeard.keyDetailView contentBinding="this"}}
-        {{#with content}}
-        <div class="page-header">
-            <h1>{{id}}</h1>
-        </div>
-        <table class="table table-bordered key-table">
-            <tbody>
-                <tr>
-                    <th>Type</th>
-                    <td>{{type}}</td>
-                </tr>
-                <tr>
-                    <th>Value</th>
-                    <td>{{{value}}}</td>
-                </tr>
-            </tbody>
-        </table>
-        {{/with}}
-    {{/view}}
-{{/each}}
-{% endraw %}</script>
-{% endblock %}
-
-{% block extra_scripts %}
-{% endblock %}
+    <script src="{{ url_for('static', filename='js/libs/jquery-1.7.2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/ember-0.9.8.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/libs/underscore-min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

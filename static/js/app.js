@@ -84,13 +84,26 @@ Redbeard.keysController = Ember.ArrayController.create({
 Redbeard.keyDetailController = Ember.ArrayController.create({
     content: [],
     key_name: '',
+    detail_url: "/keys/%@",
 
     addKey: function(key) {
         var self = this,
             key_name = key.context.get("id");
         self.set("content", []);
 
-        url = "/keys/%@".fmt(key_name);
+        url = self.detail_url.fmt(key_name);
+        $.getJSON(url, function(data) {
+            data.forEach(function(key) {
+                self.pushObject(Redbeard.Key.create(key));
+            });
+        });
+    },
+    editKey: function(key) {
+        var self = this,
+            key_name = key.context.get("id");
+        self.set("content", []);
+
+        url = self.detail_url.fmt(key_name);
         $.getJSON(url, function(data) {
             data.forEach(function(key) {
                 self.pushObject(Redbeard.Key.create(key));
@@ -102,7 +115,10 @@ Redbeard.keyDetailController = Ember.ArrayController.create({
     }
 });
 
-Redbeard.keyDetailView = Ember.View.extend({});
+Redbeard.keyDetailView = Ember.View.extend({
+    templateName: "key-detail"
+});
+Redbeard.keyEditView = Ember.View.extend({});
 
 Redbeard.keyView = Ember.View.extend({});
 
