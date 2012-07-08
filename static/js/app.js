@@ -63,12 +63,10 @@ Redbeard.keysController = Ember.ArrayController.create({
     loadKeys: function() {
         var self = this,
             key_name = self.get("key_name"),
-            url;
+            url = "/api/keys";
 
         if (key_name.length > 0) {
-            url = "/keys/%@".fmt(self.get("key_name"));
-        } else {
-            url = "/keys";
+            url += "/%@".fmt(self.get("key_name"));
         }
         $.getJSON(url, function(data) {
             self.set("content", []);
@@ -84,7 +82,7 @@ Redbeard.keysController = Ember.ArrayController.create({
 Redbeard.keyDetailController = Ember.ArrayController.create({
     content: [],
     key_name: '',
-    detail_url: "/keys/%@",
+    detail_url: "/api/keys/%@",
 
     addKey: function(key) {
         var self = this,
