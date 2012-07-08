@@ -9,6 +9,68 @@
 </head>
 <body>
     <div class="container-fluid" id="application">
+        <header>
+            <h1 id="logo">Redbeard</h1>
+        </header>
+        <hr>
+        <div class="row-fluid">
+            <div class="span3 well">
+                <script type="text/x-handlebars">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Keys</li>
+                    {{#each App.keysController}}
+                        {{#view App.KeyListView contentBinding="this"}}
+                            {{#with content}}
+                                <li {{bindAttr data-type="type"}}>{{id}}</li>
+                            {{/with}}
+                        {{/view}}
+                    {{/each}}
+                </ul>
+                </script>
+            </div>
+            <div class="span9">
+                <script type="text/x-handlebars">
+                {{#if App.selectedKeyController.content}}
+                    {{#view App.KeyView}}
+                        <div class="page-header">
+                            <h1>{{editable "content.id"}}</h1>
+                        </div>
+                        <table class="table table-bordered">
+                            <tbody>
+                                <tr>
+                                    <th>Type</th>
+                                    <td>{{content.type}}</td>
+                                </tr>
+                                <tr>
+                                    <th>Value</th>
+                                    <td>{{editable "content.value"}}</td>
+                                <tr>
+                            </tbody>
+                        </table>
+                        {{#button action="saveKey" key="content.id"}}Save{{/button}}
+                    {{/view}}
+                {{/if}}
+                </script>
+                <script type="text/x-handlebars" data-template-name="key-detail">
+                <div class="page-header">
+                    <h1>{{id}}</h1>
+                </div>
+                <table class="table table-bordered key-table">
+                    <tbody>
+                        <tr>
+                            <th>Type</th>
+                            <td>{{type}}</td>
+                        </tr>
+                        <tr>
+                            <th>Value</th>
+                            <td>{{{value}}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </script>
+            </div>
+        </div>
+
         <div class="row-fluid">
             <p>&copy; <a href="http://brack3t.com">Brack3t</a>.</p>
         </div>
@@ -16,58 +78,42 @@
 
     <script src="/static/js/libs/jquery-1.7.2.min.js"></script>
     <script src="/static/js/libs/ember-0.9.8.1.min.js"></script>
+    <script src="/static/js/libs/route_manager.js"></script>
     <script src="/static/js/libs/underscore-min.js"></script>
     <script src="/static/js/app.js"></script>
 
-    <script type="text/x-handlebars" data-template-name="application">
-    <div class="row-fluid">
-        <header>
-            <h1 id="logo">Redbeard</h1>
-        </header> 
-        {{ outlet }}
-    </div>
+
+    <script type="text/x-handlebars" data-template-name="key-edit">
+    {{#if isEditing}}
+        {{view App.TextArea valueBinding="value" propagatesEvents=true}}
+    {{else}}
+        {{#if value}}
+            {{value}}
+        {{else}}
+            <span class="no-name">empty</span>
+        {{/if}}
+    {{/if}}
     </script>
 
-    <script type="text/x-handlebars" data-template-name="keys-list">
-    <div class="span3 well">
-        <form class="form-vertical">
-            <div class="input-append">
-                {{view Redbeard.SearchTextField placeholder="Filter by name" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
-                <button type="button" {{action "loadKeys" target="Redbeard.keysController"}} class="btn">Go!</button>
-            </div>
-            {{view Redbeard.FilterSelectField prompt="Filter by type" classNames="typeFilter" selectionBinding="Redbeard.keysController.type_filter"}}
-        </form>
+                    <script type="text" style="display:hidden">
+                {{#view keysView}}
+                <form class="form-vertical">
+                    <div class="input-append">
+                        {{view Redbeard.SearchTextField placeholder="Filter by name" valueBinding="Redbeard.keysController.query" classNames="search-query"}}
+                        <button type="button" {{action "loadKeys" target="Redbeard.keysController"}} class="btn">Go!</button>
+                    </div>
+                    {{view Redbeard.FilterSelectField prompt="Filter by type" classNames="typeFilter" selectionBinding="Redbeard.keysController.type_filter"}}
+                </form>
 
-        <div id="keyslist">
-            <ul class="nav nav-list list">
-                <li class="nav-header">Keys</li>
-                {{#each key in controller}}
-                <li {{bindAttr class="type"}}><a {{action showKey context="key" href=true}}>{{key.id}}</a></li>
-                {{/key}}
-            </ul>
-        </div>
-    </div>
-    <div class="span11">
-        {{outlet}}
-    </div>
-    </script>
-    <script type="text/x-handlebars" data-template-name="key-detail">
-    <div class="page-header">
-        <h1>{{id}}</h1>
-    </div>
-    <table class="table table-bordered key-table">
-        <tbody>
-            <tr>
-                <th>Type</th>
-                <td>{{type}}</td>
-            </tr>
-            <tr>
-                <th>Value</th>
-                <td>{{{value}}}</td>
-            </tr>
-        </tbody>
-    </table>
-    <a {{action "editKey" target="Redbeard.keyDetailController"}} class="btn btn-primary"><i class="icon-pencil icon-white"></i> Edit</a>
-    </script>
+                <div id="keyslist">
+                    <ul class="nav nav-list list">
+                        <li class="nav-header">Keys</li>
+                        {{#each key in controller}}
+                        <li {{bindAttr class="type"}}><a {{action showKey context="key" href=true}}>{{key.id}}</a></li>
+                        {{/each}}
+                    </ul>
+                </div>
+                {{/view}}
+                </script>
 </body>
 </html>

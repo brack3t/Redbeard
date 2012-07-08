@@ -12,6 +12,8 @@ from werkzeug.contrib.fixers import ProxyFix
 import redis
 from redis.exceptions import ConnectionError, ResponseError
 
+import simplejson as json
+
 import settings
 
 SECRET_KEY = "781ba680hf13493089a6ffafac755a61"
@@ -60,6 +62,19 @@ class KeyAPI(MethodView):
         r_keys = r.keys("%s*" % partial)
         return [self._get_key(k) for k in r_keys]
 
+    def _set_key(self, key_id, key_type, key_value):
+        r = get_redis_connection(session)
+
+        if key_type == "string":
+            r.set(key_id, key_value)
+            return self._get_key(key_id)
+        elif key_type == "hash":
+            values = json.loads("%s" % key_value)
+            for key, value in values:
+                r.hset(key_id, key, value)
+            return self._get_key(key_id)
+        return None
+
     def get(self, partial=None):
         partial = partial or ''
 
@@ -70,8 +85,16 @@ class KeyAPI(MethodView):
         else:
             return render_template("list.html", keys=keys)
 
-    def post(self, key_id):
-            return render_template(self.template_name)
+    def post(self):
+        return render_template(self.template_name)
+
+    def put(self, partial=None):
+        key_type = request.values.get("type", "string")
+        key_id = request.values.get("id")
+        key_value = request.values.get("value")
+
+        key = self._set_key(key_id, key_type, key_value)
+        return render_template(self.template_name, key=key)
 
 key_view = KeyAPI.as_view("key_view")
 app.add_url_rule("/api/keys", defaults={"partial": None}, view_func=key_view,

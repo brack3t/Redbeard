@@ -1,123 +1,167 @@
-Redbeard = Ember.Application.create();
+App = Ember.Application.create();
 
-Redbeard.Key = Ember.Object.extend({
-    type: null,
+// Model
+App.Key = Ember.Object.extend({
     id: null,
+    type: null,
     value: null
 });
 
-Redbeard.SearchTextField = Ember.TextField.extend({
-    insertNewLine: function() {
-        Redbeard.keysController.loadKeys();
-    }
-});
-
-Redbeard.FilterSelectField = Ember.Select.extend({
-    content: Ember.A([
-        {type: "all", label: "All"},
-        {type: "hash", label: "Hashes"},
-        {type: "list", label: "Lists"},
-        {type: "set", label: "Sets"},
-        {type: "string", label: "Strings"},
-        {type: "zset", label: "ZSets"}
-    ]),
-    optionLabelPath: "content.label",
-    optionValuePath: "content.type"
-});
-
-Redbeard.keysController = Ember.ArrayController.create({
+// Controllers
+App.keysController = Ember.ArrayController.create({
     content: [],
-    key_name: '',
-    query: '',
-    type_filter: '',
-    total_content: [],
 
-    filter_type: function() {
-        var self = this,
-            type_filter = self.get("type_filter");
+    add: function(key) {
+        this.insertAt(0, key);
+    },
 
-        if (type_filter !== null && type_filter.type !== "all") {
-            self.set("content", self.total_content);
-            var real_type_filter = type_filter.type,
-                content = self.get("content");
+    remove: function(key) {
+        this.removeObject(key);
+    },
 
-            new_content = _.filter(content, function(key) {
-                return key.type === real_type_filter;
-            });
-            self.set("content", new_content);
-        } else {
-            self.loadKeys();
-        }
+    newKey: function() {
+        var id = Math.floor(math.random()*Math.PI),
+            type = Math.random();
 
-    }.observes("type_filter"),
-
-    filter: function() {
-        var self = this,
-            query = self.get("query");
-
-        self.set("key_name", query);
-
-        self.loadKeys(query);
-    }.observes("query"),
+        this.add(App.Key.create({
+            id: id,
+            type: type,
+            value: ''
+        }));
+    },
 
     loadKeys: function() {
-        var self = this,
-            key_name = self.get("key_name"),
-            url = "/api/keys";
+        var self = this;
 
-        if (key_name.length > 0) {
-            url += "/%@".fmt(self.get("key_name"));
+        $.getJSON("/api/keys", function(data) {
+            var keys = data;
+            keys = keys.map(function(item) {
+                return self.createKeyFromJSON(item);
+            });
+
+            self.set("content", keys);
+        });
+    },
+
+    htmlDecode: function(value) {
+        return $("<div/>").html(value).text();
+    },
+
+    createKeyFromJSON: function(json) {
+        json.value = this.htmlDecode(json.value);
+
+        return App.Key.create(json);
+    },
+
+    saveKey: function() {
+        var self = this,
+            found_key = App.selectedKeyController.get("content");
+
+        var submit = $.ajax({
+            url: "/api/keys/%@".fmt(found_key.id),
+            type: "PUT",
+            dataType: "json",
+            data: {
+                "id": found_key.id,
+                "type": found_key.type,
+                "value": found_key.value
+            }
+        });
+        submit.done(function(data, jqXHR, textStatus) {
+            console.log(data);
+        });
+        submit.fail(function(data, jqXHR, textStatus) {
+            console.log(data);
+        });
+    }
+});
+
+App.keysController.loadKeys();
+
+App.selectedKeyController = Ember.Object.create({
+    content: null
+});
+
+App.EditField = Ember.View.extend({
+    tagName: "span",
+    templateName: "key-edit",
+
+    doubleClick: function() {
+        this.set("isEditing", true);
+        return false;
+    },
+
+    touchEnd: function() {
+        var touchTime = new Date();
+        if (this._lastTouchTime && touchTime - this._lastTouchTime < 250) {
+            this.doubleClick();
+            this._lastTouchTime = null;
+        } else {
+            this._lastTouchTime = touchTime;
         }
-        $.getJSON(url, function(data) {
-            self.set("content", []);
 
-            data.forEach(function(key) {
-                self.pushObject(Redbeard.Key.create(key));
-            });
-            self.set("total_content", self.content);
-        });
+        return false; // Prevent zooming
+    },
+
+    focusOut: function() {
+        this.set("isEditing", false);
+    },
+
+    keyUp: function(evt) {
+        if (evt.keyCode === 13) {
+            this.set("isEditing", false);
+        }
     }
 });
 
-Redbeard.keyDetailController = Ember.ArrayController.create({
-    content: [],
-    key_name: '',
-    detail_url: "/api/keys/%@",
-
-    addKey: function(key) {
-        var self = this,
-            key_name = key.context.get("id");
-        self.set("content", []);
-
-        url = self.detail_url.fmt(key_name);
-        $.getJSON(url, function(data) {
-            data.forEach(function(key) {
-                self.pushObject(Redbeard.Key.create(key));
-            });
-        });
-    },
-    editKey: function(key) {
-        var self = this,
-            key_name = key.context.get("id");
-        self.set("content", []);
-
-        url = self.detail_url.fmt(key_name);
-        $.getJSON(url, function(data) {
-            data.forEach(function(key) {
-                self.pushObject(Redbeard.Key.create(key));
-            });
-        });
-    },
-    removeKey: function(view) {
-        this.removeObject(view.context);
+App.TextField = Ember.TextField.extend({
+    didInsertElement: function() {
+        this.$().focus();
     }
 });
 
-Redbeard.keyDetailView = Ember.View.extend({
-    templateName: "key-detail"
+App.TextArea = Ember.TextArea.extend({
+    didInsertElement: function() {
+        this.$().focus();
+    }
 });
-Redbeard.keyEditView = Ember.View.extend({});
 
-Redbeard.keyView = Ember.View.extend({});
+Ember.Handlebars.registerHelper("editable", function(path, options) {
+    options.hash.valueBinding = path;
+    return Ember.Handlebars.helpers.view.call(this, App.EditField, options);
+});
 
-Redbeard.keysController.loadKeys();
+Ember.Handlebars.registerHelper("button", function(options) {
+    var hash = options.hash;
+
+    if (!hash.target) {
+        hash.target = "App.keysController";
+    }
+    return Ember.Handlebars.helpers.view.call(this, Ember.Button, options);
+});
+
+App.KeyListView = Ember.View.extend({
+    classNameBindings: ["isSelected"],
+
+    click: function() {
+        var content = this.get("content");
+
+        App.selectedKeyController.set("content", content);
+    },
+
+    touchEnd: function() {
+        this.click();
+    },
+
+    isSelected: function() {
+        var selectedItem = App.selectedKeyController.get("content"),
+            content = this.get("content");
+
+        if (content === selectedItem) { return true; }
+    }.property("App.selectedKeyController.content")
+});
+
+App.KeyView = Ember.View.extend({
+    contentBinding: "App.selectedKeyController.content",
+    classNames: ["key"]
+});
