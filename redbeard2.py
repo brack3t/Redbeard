@@ -7,6 +7,7 @@ __license__ = "MIT"
 
 from flask import Flask, render_template, request, session
 from flask.views import MethodView
+from werkzeug.contrib.fixers import ProxyFix
 
 import redis
 from redis.exceptions import ConnectionError, ResponseError
@@ -18,6 +19,7 @@ SECRET_KEY = "781ba680hf13493089a6ffafac755a61"
 app = Flask(__name__)
 app.config.from_object(__name__)
 app.debug = True
+app.wsgi_app = ProxyFix(app.wsgi_app)
 
 
 class Key(object):
@@ -72,10 +74,10 @@ class KeyAPI(MethodView):
             return render_template(self.template_name)
 
 key_view = KeyAPI.as_view("key_view")
-app.add_url_rule("/keys", defaults={"partial": None}, view_func=key_view,
+app.add_url_rule("/api/keys", defaults={"partial": None}, view_func=key_view,
     methods=["GET"])
-app.add_url_rule("/keys", view_func=key_view, methods=["POST"])
-app.add_url_rule("/keys/<string:partial>", view_func=key_view,
+app.add_url_rule("/api/keys", view_func=key_view, methods=["POST"])
+app.add_url_rule("/api/keys/<string:partial>", view_func=key_view,
     methods=["GET", "PUT", "DELETE"])
 
 

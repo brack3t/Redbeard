@@ -1,3 +1,4 @@
 .hg/
 .hgignore
 *.pyc
+logs/
